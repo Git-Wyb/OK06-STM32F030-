@@ -665,8 +665,8 @@ extern u1 u1g_f_active_format;
 extern u1 u1g_fg_read_retry;		
 
 extern u2 u2g_raw_data[NUM_CAPTURE_DATA];
-extern u2 u2g_check_temp_ad_data[NUM_AD_CHECK_DATA];
-extern u2 u2g_check_ver_ad_data[NUM_AD_CHECK_DATA];
+extern u2 u2g_check_temp_ad_data[10];//NUM_AD_CHECK_DATA
+extern u2 u2g_check_ver_ad_data[10];
 
 extern s1 s1g_temp_v;
 

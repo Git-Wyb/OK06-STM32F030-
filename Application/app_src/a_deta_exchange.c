@@ -93,11 +93,11 @@ u2 a_u2g_close_AD_exchange_to_Nm(u1 u1a_close_AD_data)
 u2 a_u2g_close_Nm_exchange_to_AD(u2 u2a_close_Nm)
 {
 	u2 u2a_AD_data = 0;
-	f4 f4a_Nm = 0.0;		
-	f4 f4a_VER = 0.0;		
-	f4 f4a_result = 0.0;	
+	f4 f4a_Nm = 0;		
+	f4 f4a_VER = 0;		
+	f4 f4a_result = 0;	
 
-	f4a_Nm = (f4)u2a_close_Nm / F4L_NM_RADIX;	
+	f4a_Nm = (f4)u2a_close_Nm / F4L_NM_RADIX;//62/100 = 0.62	
 	f4a_VER = F4L_EX_CLOSE_VER_2JI * f4a_Nm * f4a_Nm + F4L_EX_CLOSE_VER_1JI * f4a_Nm + F4L_EX_CLOSE_VER_CONST;
 	f4a_result = f4a_VER * F4L_AD_MAX / F4L_BORAD_MAX_VER;
 

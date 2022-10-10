@@ -1,12 +1,8 @@
-/*************************************************************/
-/*  call mode process */
-/*  “®ìƒ‚[ƒh‚ğŒÄ‚Ôˆ— */
-/*************************************************************/
 
 #ifndef _MODE_PROCESS_H_
 #define _MODE_PROCESS_H_
 
-#include "typedefine.h"
+
 
 #define TIME_PRE_BREAK 100/* 100msec */
 #define TIME_BREAK_STOP 2

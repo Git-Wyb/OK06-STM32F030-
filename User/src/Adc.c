@@ -38,7 +38,7 @@ void Init_Adc(void)
     
     ADC1->IER = ADC_IER_EOCIE;    //开启转换结束中断
     NVIC_EnableIRQ(ADC1_COMP_IRQn);
-    NVIC_SetPriority(ADC1_COMP_IRQn,0);
+    NVIC_SetPriority(ADC1_COMP_IRQn,5);
     
     /* ADC Calibration */
     ADC_GetCalibrationFactor(ADC1);
@@ -52,9 +52,9 @@ void Init_Adc(void)
     /* Convert the ADC1 ADC_Channel_1 with 55.5 Cycles as sampling time */ 
     //ADC_ChannelConfig(ADC1, ADC_Channel_2,ADC_SampleTime_55_5Cycles);//温度 //选择转换通道
     //ADC_ChannelConfig(ADC1,ADC_Channel_1,ADC_SampleTime_55_5Cycles);    //电压
-    ADC_ChannelConfig(ADC1,ADC_Channel_5,ADC_SampleTime_55_5Cycles);    //过负荷
+    //ADC_ChannelConfig(ADC1,ADC_Channel_5,ADC_SampleTime_55_5Cycles);    //过负荷
 }
-//DMA1_Channel1_IRQHandler
+
 void R_ADC_Start(void)
 {
     while(!ADC_GetFlagStatus(ADC1, ADC_FLAG_ADRDY));
@@ -77,11 +77,11 @@ void ADC1_COMP_IRQHandler(void)
             u2g_raw_data[u1g_limit_ad] = (ADC1->DR);
         }
         u1g_limit_ad ++; 
-        if(u1g_limit_ad == 7)
+        if(u1g_limit_ad >= 7)
         {
             R_ADC_Stop();
         }
-        ADC1->ISR = (uint32_t)ADC_FLAG_EOC;
+        ADC1->ISR = (uint32_t)ADC_FLAG_EOC; //Clear
     }
 }
 
@@ -110,13 +110,15 @@ void select_ad_class(u1 u1l_ad_class)
     }
 	else{}	
 }
+u1 curr_buff[10] = {0};
 u1 ad_num_test = 9;
 void adc_test(void)
 {
+    u1 i = 0;
     if(u1g_limit_ad >= 7)
     {
         u1g_limit_ad = 0;
-        R_ADC_Stop();
+        //R_ADC_Stop();
         select_ad_class(ad_num_test);
         if(ad_num_test == VER)  
         {
@@ -125,6 +127,13 @@ void adc_test(void)
         else    
         {
             P_VER_POWER_0;
+        }
+        if(ad_num_test == 10)
+        {
+            for(i=0; i<7; i++)
+            {
+                curr_buff[i] = u2g_raw_data[i];
+            }
         }
         R_ADC_Start();
         ad_num_test++;

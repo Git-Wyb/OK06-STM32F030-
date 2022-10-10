@@ -147,8 +147,8 @@ u2 u2g_soft_clear_timer_counter = 0;
 u1 u1g_fg_read_retry = 0;				
 
 u2 u2g_raw_data[NUM_CAPTURE_DATA] = {0};			
-u2 u2g_check_temp_ad_data[NUM_AD_CHECK_DATA] = {0};
-u2 u2g_check_ver_ad_data[NUM_AD_CHECK_DATA] = {0};
+u2 u2g_check_temp_ad_data[10] = {0};//NUM_AD_CHECK_DATA
+u2 u2g_check_ver_ad_data[10] = {0};
 
 s1 s1g_temp_v = 0;						
 

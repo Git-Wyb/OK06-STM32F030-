@@ -29,10 +29,10 @@
 .\objects\a_control_sol.o: .\Libraries\STM32F0xx_StdPeriph_Driver\inc\stm32f0xx_usart.h
 .\objects\a_control_sol.o: .\Libraries\STM32F0xx_StdPeriph_Driver\inc\stm32f0xx_wwdg.h
 .\objects\a_control_sol.o: .\Libraries\STM32F0xx_StdPeriph_Driver\inc\stm32f0xx_misc.h
+.\objects\a_control_sol.o: .\User\inc\Sys.h
 .\objects\a_control_sol.o: .\Application\app_inc\variables.h
 .\objects\a_control_sol.o: .\Application\app_inc\constants.h
 .\objects\a_control_sol.o: .\Application\app_inc\comm_uart.h
-.\objects\a_control_sol.o: .\User\inc\Sys.h
 .\objects\a_control_sol.o: .\Application\app_inc\def_local.h
 .\objects\a_control_sol.o: .\Application\app_inc\functions.h
 .\objects\a_control_sol.o: .\Application\app_inc\ecu_test.h

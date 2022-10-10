@@ -360,7 +360,7 @@
             </VariousControls>
           </Aads>
           <LDads>
-            <umfTarg>0</umfTarg>
+            <umfTarg>1</umfTarg>
             <Ropi>0</Ropi>
             <Rwpi>0</Rwpi>
             <noStLib>0</noStLib>
@@ -369,7 +369,7 @@
             <TextAddressRange>0x08000000</TextAddressRange>
             <DataAddressRange>0x20000000</DataAddressRange>
             <pXoBase></pXoBase>
-            <ScatterFile></ScatterFile>
+            <ScatterFile>.\Objects\OK06(STM32F030)_Pro.sct</ScatterFile>
             <IncludeLibs></IncludeLibs>
             <IncludeLibsPath></IncludeLibsPath>
             <Misc></Misc>
@@ -671,6 +671,71 @@
               <FileName>tst_break.c</FileName>
               <FileType>1</FileType>
               <FilePath>.\Application\app_src\tst_break.c</FilePath>
+            </File>
+            <File>
+              <FileName>version.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\Application\app_inc\version.h</FilePath>
+            </File>
+            <File>
+              <FileName>flash_data_read.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\Application\app_inc\flash_data_read.h</FilePath>
+            </File>
+            <File>
+              <FileName>input_encoder.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\Application\app_inc\input_encoder.h</FilePath>
+            </File>
+            <File>
+              <FileName>functions.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\Application\app_inc\functions.h</FilePath>
+            </File>
+            <File>
+              <FileName>tst_break.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\Application\app_inc\tst_break.h</FilePath>
+            </File>
+            <File>
+              <FileName>access_flash.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\Application\app_inc\access_flash.h</FilePath>
+            </File>
+            <File>
+              <FileName>anjou_test.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\Application\app_inc\anjou_test.h</FilePath>
+            </File>
+            <File>
+              <FileName>ecu_test.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\Application\app_inc\ecu_test.h</FilePath>
+            </File>
+            <File>
+              <FileName>trq_adjust_trqchange.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\Application\app_inc\trq_adjust_trqchange.h</FilePath>
+            </File>
+            <File>
+              <FileName>a_common_value.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\Application\app_inc\a_common_value.h</FilePath>
+            </File>
+            <File>
+              <FileName>mode_process.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\Application\app_inc\mode_process.h</FilePath>
+            </File>
+            <File>
+              <FileName>motion_com.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\Application\app_inc\motion_com.h</FilePath>
+            </File>
+            <File>
+              <FileName>select_mode.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\Application\app_inc\select_mode.h</FilePath>
             </File>
           </Files>
         </Group>

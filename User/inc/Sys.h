@@ -266,19 +266,23 @@ typedef union{
     u1 Flag;
     struct
     {
-        u1 bit0 : 1;
-        u1 bit1 : 1;
-        u1 bit2 : 1;
-        u1 bit3 : 1;
-        u1 bit4 : 1;
-        u1 bit5 : 1;
-        u1 bit6 : 1;
-        u1 bit7 : 1;
+        u1 b0 : 1;
+        u1 b1 : 1;
+        u1 b2 : 1;
+        u1 b3 : 1;
+        u1 b4 : 1;
+        u1 b5 : 1;
+        u1 b6 : 1;
+        u1 b7 : 1;
     };
 }BaseFlagStruct;
 
 extern BaseFlagStruct Un_Flag0;
-#define flag_CaptureStart Un_Flag0.bit0
+#define flag_CaptureStart   Un_Flag0.b0
+#define flag_key_scan       Un_Flag0.b1
+#define flag_sw_sta         Un_Flag0.b2
+#define flag_tim17_en       Un_Flag0.b3
+#define flag_tim16_en       Un_Flag0.b4
 
 void Init_IWDG(void);
 void delay_ms(u2 nms);
@@ -286,6 +290,8 @@ void delay_us(u4 nus);
 void Init_Delay(void);
 void IWDG_Clear(void);
 void R_WDT_Restart(void);
+u1 Key_Scan(void);
+void Key_Sw_Dete(void);
 
 #endif
 

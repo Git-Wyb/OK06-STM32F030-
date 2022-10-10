@@ -868,6 +868,7 @@ static void ad_correct(void)
 
 	ad_start_set(u1g_ad_num);
 	u1g_ad_num_temp = (u1)(u1g_ad_num - CURR);
+//    if(u1g_ad_num == CURR) u2g_now_data = 5;
 	u2g_now_data = capture_ad_start(NUM_CAPTURE_DATA,(u1)(NUM_ADOPT_DATA - 1));
 	switch( u1g_ad_num ){
 		case CURR:
@@ -1228,9 +1229,9 @@ u2 capture_ad_start(u1 u1_num,u1 u1_usedata_num)
     u1g_limit_ad = 0;
 	R_ADC_Start();
 	while( u1g_limit_ad < u1g_limittime ){
-		__nop();
+		;//__nop();
 	}
-	R_ADC_Stop();
+	//R_ADC_Stop();
 	u1g_limit_ad = 0;
 
 	for( u1a_j = 0; u1a_j < (u1)(u1_num - 1) ; u1a_j++ ){
@@ -1481,7 +1482,7 @@ static void check_temp_error(void){
 
 	u1 u1a_i = 0;
 	u1 u1a_center_num = NUM_AD_CHECK_DATA / 2;
-	u2 u2a_temp_ad_data[NUM_AD_CHECK_DATA];
+	u2 u2a_temp_ad_data[10];//NUM_AD_CHECK_DATA
 
 	for( u1a_i = 0; u1a_i < NUM_AD_CHECK_DATA; u1a_i++ )
 		{
@@ -1575,7 +1576,7 @@ static void check_ver_error(void){
 
 	u1 u1a_i = 0;
 	u1 u1a_center_num = NUM_AD_CHECK_DATA / 2;
-	u2 u2a_ver_ad_data[NUM_AD_CHECK_DATA];
+	u2 u2a_ver_ad_data[10];//NUM_AD_CHECK_DATA
 
 	for( u1a_i = 0; u1a_i < NUM_AD_CHECK_DATA; u1a_i++ )
 		{

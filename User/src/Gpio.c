@@ -39,7 +39,20 @@ void Init_Gpio(void)
     GPIO_Init(GPIOB, &GPIO_InitStructure);
     
     P_VER_POWER_0;
-    //P_EM_RESET_N_1;
+    P_EM_RESET_N_0;
 }
 
+u1 P_OPEN_SW_Input(void)
+{
+    return (u1)(~GPIO_ReadInputDataBit(GPIOB,GPIO_Pin_15) & 0x01);
+}
 
+u1 P_STOP_SW_Input(void)
+{
+    return (u1)(~GPIO_ReadInputDataBit(GPIOB,GPIO_Pin_14) & 0x01);
+}
+
+u1 P_CLOSE_SW_Input(void)
+{
+    return (u1)(~GPIO_ReadInputDataBit(GPIOB,GPIO_Pin_13) & 0x01);
+}

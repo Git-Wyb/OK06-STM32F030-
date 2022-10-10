@@ -12,8 +12,8 @@
 #define U2L_ZERO		((u2)0x00U)
 #define	U2L_1000_TIME		((u2)0x3E8U)
 #define	U2L_MAX			((u2)0xFFFFU)
-#define	U2L_TIME_KAHUKA_LOOSE_MS	((u2)0x0000U)		/* 1.0s 過負荷反転直後の過負荷しきい値を大きくする時間[ms] */
-#define	U2L_TIME_KAHUKA_LOOSE_SEC	((u2)0x0001U)		/* 1.0s 過負荷反転直後の過負荷しきい値を大きくする時間[sec] */
+#define	U2L_TIME_KAHUKA_LOOSE_MS	((u2)0x0000U)
+#define	U2L_TIME_KAHUKA_LOOSE_SEC	((u2)0x0001U)
 
 
 #define D_PWM_MAX_T         0x2AB0 //10928,100%

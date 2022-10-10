@@ -1,4 +1,6 @@
 #include "Sys.h"
+#include "Gpio.h"
+#include "Timer.h"
 
 BaseFlagStruct Un_Flag0 = {0};
 
@@ -86,3 +88,65 @@ void delay_ms(u2 nms)
 }
 
 
+u1 Key_Scan(void)
+{
+    if((P_OPEN_SW == 1 || P_STOP_SW == 1 || P_CLOSE_SW == 1) && flag_key_scan == 0)
+    {
+        delay_ms(50);
+        if(P_OPEN_SW == 1 || P_STOP_SW == 1 || P_CLOSE_SW == 1)
+        {
+            flag_key_scan = 1;
+            if(P_OPEN_SW)   return 1;
+            else if(P_STOP_SW)  return 2;
+            else if(P_CLOSE_SW) return 3;
+        }
+    }
+    else if(P_OPEN_SW == 0 && P_STOP_SW == 0 && P_CLOSE_SW == 0)
+    {
+        flag_key_scan = 0;
+    }
+    return 0;
+}
+
+u1 key_in = 0;
+void Key_Sw_Dete(void)
+{
+    key_in = Key_Scan();
+    switch(key_in)
+    {
+        case 1:
+            if(flag_sw_sta == 0)
+            {
+                flag_sw_sta = 1;
+                P_RELAY_3_0;
+                P_RELAY_2_1;
+                P_RELAY_1_1;
+                R_TAU0_Channel4_Start();
+            }
+            break;
+        case 2:
+            flag_sw_sta = 0;
+            P_RELAY_2_0;
+            P_RELAY_3_0;
+            P_RELAY_1_0;
+            R_TAU0_Channel4_Stop();
+            break;
+        case 3:
+            if(flag_sw_sta == 0)
+            {
+                flag_sw_sta = 1;
+                P_RELAY_3_1;
+                P_RELAY_2_0;
+                P_RELAY_1_1;
+            }
+            break;
+        default:
+            if(flag_sw_sta == 0)
+            {
+                P_RELAY_3_0;
+                P_RELAY_2_0;
+                P_RELAY_1_0;
+            }
+            break;
+    }
+}

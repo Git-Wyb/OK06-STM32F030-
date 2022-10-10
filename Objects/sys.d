@@ -29,3 +29,5 @@
 .\objects\sys.o: .\Libraries\STM32F0xx_StdPeriph_Driver\inc\stm32f0xx_usart.h
 .\objects\sys.o: .\Libraries\STM32F0xx_StdPeriph_Driver\inc\stm32f0xx_wwdg.h
 .\objects\sys.o: .\Libraries\STM32F0xx_StdPeriph_Driver\inc\stm32f0xx_misc.h
+.\objects\sys.o: .\User\inc\Gpio.h
+.\objects\sys.o: .\User\inc\Timer.h

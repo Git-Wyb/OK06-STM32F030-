@@ -224,7 +224,7 @@ void first_data_check(void);
 void make_check_sum(void);
 void make_size_check_sum(void);
 
-/* 　overload.c AD変換 */
+
 u2 read_ad_data(u1);				/* AD変換結果レジスタの読出し */
 void select_ad_class(u1);				/* AD変換ポート指定 */
 

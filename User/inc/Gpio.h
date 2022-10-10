@@ -2,7 +2,7 @@
 #define __GPIO_H__
 
 #include "stm32f0xx.h"
-
+#include "Sys.h"
 
 #define GPIOx_IN(GPIOx,PINx)   (u1){(GPIOx->IDR & PINx) ? 1 : 0}
 #define GPIOx_OUT(GPIOx,PINx,y)   {if(y){GPIOx->BSRR = PINx;}else{GPIOx->BRR = PINx;}}
@@ -53,7 +53,8 @@ IO IN: PB13/PB14/PB15
 #define P_ECU_TEST2     1//GPIOx_IN(GPIOF,GPIO_Pin_6)
 
 void Init_Gpio(void);
-
-
+u1 P_OPEN_SW_Input(void);
+u1 P_STOP_SW_Input(void);
+u1 P_CLOSE_SW_Input(void);
 
 #endif

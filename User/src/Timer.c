@@ -28,7 +28,7 @@ void Init_Timer6(void)
 
     /* Enable the TIM6 gloabal Interrupt */
     NVIC_InitStructure.NVIC_IRQChannel = TIM6_DAC_IRQn;
-    NVIC_InitStructure.NVIC_IRQChannelPriority = 3;
+    NVIC_InitStructure.NVIC_IRQChannelPriority = 4;
     NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE;
     NVIC_Init(&NVIC_InitStructure);
     
@@ -87,7 +87,7 @@ void Init_Timer16(void)
     
     /* Enable the TIM16 gloabal Interrupt */
     NVIC_InitStructure.NVIC_IRQChannel = TIM16_IRQn;
-    NVIC_InitStructure.NVIC_IRQChannelPriority = 2;
+    NVIC_InitStructure.NVIC_IRQChannelPriority = 3;
     NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE;
     NVIC_Init(&NVIC_InitStructure);
     
@@ -106,7 +106,7 @@ void Init_Timer16(void)
     TIM_OCInitStructure.TIM_OCNPolarity = TIM_OCNPolarity_High;
     TIM_OCInitStructure.TIM_OCIdleState = TIM_OCIdleState_Set;
     TIM_OCInitStructure.TIM_OCNIdleState = TIM_OCIdleState_Reset;
-    TIM_OCInitStructure.TIM_Pulse = 0;//32000;//8742;//3278;//5464;  //占空比
+    TIM_OCInitStructure.TIM_Pulse = 0;//5464;//8742;//3278;//5464;  //占空比
 
     TIM_OC1Init(TIM16, &TIM_OCInitStructure);
     //TIM_OC1PreloadConfig(TIM16, TIM_OCPreload_Disable);
@@ -118,28 +118,33 @@ void Init_Timer16(void)
     /* TIM1 Main Output Enable */
     //TIM_CtrlPWMOutputs(TIM16, ENABLE);
 }
-
+//2160=4479;720=1550;545=980;654=1320;630=1250/1178;580=1080;600=1128;610=1146;624=1180/1144;620=1160;622=1168
 void TIM16_IRQHandler(void)
 {
     if((TIM16->SR & TIM_FLAG_Update) == SET)
     {
         TIM16->SR &= ~TIM_FLAG_Update;
 
-        TIM16->CCR1 = (u2)u2g_d_pwm;
+        TIM16->CCR1 = (u2)u2g_d_pwm;//624;//5464;//(u2)u2g_d_pwm;
     }
 }
 
 void R_TAU0_Channel4_Start(void)
 {
+    flag_tim16_en = 1;
     TIM_Cmd(TIM16, ENABLE);
     TIM_CtrlPWMOutputs(TIM16, ENABLE);
 }
 void R_TAU0_Channel4_Stop(void)
 {
-    TIM16->CNT = 0;
-    TIM16->CCR1 = 0;
-    TIM_Cmd(TIM16, DISABLE);
-    TIM_CtrlPWMOutputs(TIM16, DISABLE);
+    if(flag_tim16_en == 1)
+    {
+        flag_tim16_en = 0;
+        TIM16->CNT = 0;
+        TIM16->CCR1 = 0;
+        TIM_CtrlPWMOutputs(TIM16, DISABLE);
+        TIM_Cmd(TIM16, DISABLE);
+    }
 }
 
 //刹车:Fclk = 4MHz,TIM_Period = 36000 D_BREAK_MAX_LEVEL=0x8CA0,T = 9ms(111.1Hz)
@@ -167,7 +172,7 @@ void Init_Timer17(void)
     
     /* Enable the TIM17 gloabal Interrupt */
     NVIC_InitStructure.NVIC_IRQChannel = TIM17_IRQn;
-    NVIC_InitStructure.NVIC_IRQChannelPriority = 1;
+    NVIC_InitStructure.NVIC_IRQChannelPriority = 2;
     NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE;
     NVIC_Init(&NVIC_InitStructure);
     
@@ -211,15 +216,20 @@ void TIM17_IRQHandler(void)
 
 void R_TAU0_Channel6_Start(void)
 {
+    flag_tim17_en = 1;
     TIM_Cmd(TIM17, ENABLE);
     TIM_CtrlPWMOutputs(TIM17, ENABLE);
 }
 void R_TAU0_Channel6_Stop(void)
 {
-    TIM17->CNT = 0;
-    TIM17->CCR1 = 0;
-    TIM_Cmd(TIM17, DISABLE);
-    TIM_CtrlPWMOutputs(TIM17, DISABLE);
+    if(flag_tim17_en == 1)
+    {
+        flag_tim17_en = 0;
+        TIM17->CNT = 0;
+        TIM17->CCR1 = 0;
+        TIM_Cmd(TIM17, DISABLE);
+        TIM_CtrlPWMOutputs(TIM17, DISABLE);
+    }
 }
 
 
@@ -299,7 +309,7 @@ void TIM15_IRQHandler(void)
             overflow_cnt = 0;
             TIM15->CNT = 0;
             TIM15->CCR2 = 0;
-            u4g_plus_length_buffer = g_tau0_ch2_width;
+            u4g_plus_length_buffer = g_tau0_ch2_width / 2;
             int_input_encoder();
             //int_input_encoder_test();
             TIM15->SR &= ~TIM_FLAG_Update;   //Clear Flag
@@ -328,7 +338,7 @@ void TIM15_IRQHandler(void)
             TIM_ITConfig(TIM15,TIM_IT_Update,DISABLE);   //关闭更新中断
         }
     }
-    //TIM15->SR &= ~TIM_FLAG_Update;   //Clear Flag
+    TIM15->SR &= ~TIM_FLAG_Update;   //Clear Flag
 }
 f4 Pwm_val = 0;
 f4 T = 0;
@@ -358,8 +368,6 @@ void int_input_encoder_test(void)
 void int_system_timer(void)
 {
 /*------------------------ 1msec --------------------------*/
-                                                    
-	/********* ポンプ出力用 フラグ　**************/
 	if( u1g_fg_charge_pump_enable == 1 ){
 		P_RELAY_1_1;
 	}
@@ -367,14 +375,12 @@ void int_system_timer(void)
 		P_RELAY_1_0;
 	}
 
-	//sw_input_check();					/*SW入力確認		*/
-	u2g_c_interval_plus++;					/*??????間隔????*/
+	//sw_input_check();
+	u2g_c_interval_plus++;
 		
-	/* pwmからブレーキ切替時間カウント */
 	if( u1g_pwm_break_timer_counter < 255 ){
 		u1g_pwm_break_timer_counter ++;
 	}
-//	参考　0xffffffff[msec]は約５０日
 		if(u2g_systimer_1ms_wait_motion < (u2)U2L_1000_TIME ){
 			u2g_systimer_1ms_wait_motion++;
 		}
@@ -392,8 +398,7 @@ void int_system_timer(void)
 			}
 			else{}
 		}
-		
-		//	安城検査工程用に追加したタイマ		
+			
 		if(u2g_systimer_1ms_timer_for_anjou < (u2)U2L_1000_TIME ){
 			u2g_systimer_1ms_timer_for_anjou++;
 		}
@@ -432,16 +437,16 @@ void int_system_timer(void)
 		else{}
 
 		u1g_count_timer_1ms++;
-		if( u1g_count_timer_1ms >= U1L_100_TIME)		/*100ms経過,100ms????加算はここで*/
+		if( u1g_count_timer_1ms >= U1L_100_TIME)
 			{
 				u1g_count_timer_1ms = U1L_ZERO;
 				u1l_count_100ms++;
 				Fg_timer_100ms_f = U1L_MAX;
 				
 				if( u1g_t_break_max_timer_counter < 255 ){
-					u1g_t_break_max_timer_counter ++;	//トランジスタブレーキ最大出力時間???? */
+					u1g_t_break_max_timer_counter ++;
 				}				
-				if(u1l_count_100ms >= U1L_10_TIME)		/*1s経過,1s????加算はここで*/
+				if(u1l_count_100ms >= U1L_10_TIME)
 					{
 						u1l_count_100ms = U1L_ZERO;
 					}
@@ -456,4 +461,3 @@ void reset_system_timer(void)
 		u1g_count_timer_1ms = U1L_ZERO;
 		Fg_timer_100ms_f = U1L_ZERO;
 }
-

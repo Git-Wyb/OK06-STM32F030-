@@ -47,6 +47,7 @@
 ".\objects\state_table_1_0.o"
 ".\objects\trq_adjust_trqchange.o"
 ".\objects\tst_break.o"
---ro-base 0x08000000 --entry 0x08000000 --rw-base 0x20000000 --entry Reset_Handler --first __Vectors --strict --summary_stderr --info summarysizes --map --load_addr_map_info --xref --callgraph --symbols
+--strict --scatter ".\Objects\OK06(STM32F030)_Pro.sct"
+--summary_stderr --info summarysizes --map --load_addr_map_info --xref --callgraph --symbols
 --info sizes --info totals --info unused --info veneers
 --list ".\Listings\OK06(STM32F030)_Pro.map" -o .\Objects\OK06(STM32F030)_Pro.axf

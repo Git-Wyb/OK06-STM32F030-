@@ -39,34 +39,48 @@ static void soft_lock_signal(void);
 void variable_setup(void);
 static void main_loop(void);
 
-//u1 w_buff[80] = {0};
-
+u1 w_buff[10] = {0};
+//typedef union{
+//    u2 towbyte;
+//    struct{
+//        u2 bt0:1;
+//        u2 bt1:1;
+//        u2 bt2:1;
+//        u2 bt3:1;
+//        u2 bt4:1;
+//        u2 bt5:1;
+//        u2 bt6:1;
+//        u2 bt7:1;
+//        u2 bt8:1;
+//    }bit; 
+//}TOWBYTE;
 int main(void)
 {
-    Init_IWDG();
+    //Init_IWDG();
     Init_Gpio();
     Init_Delay();
-    storage_init();
+//    storage_init();
     R_WDT_Restart();
     Init_Adc();
     Init_Timer6();
-    Init_Timer17();
     Init_Timer16();
+    Init_Timer17();
     Init_Timer15();
     Init_Uart1(9600);
     R_WDT_Restart();
     variable_setup();
-//    M24C16_Write(0,w_buff,80);
-//    M24C16_Write(80,w_buff,80);
-//    M24C16_Write(160,w_buff,80);
-//    M24C16_Write(240,w_buff,80);
-//    M24C16_Write(320,w_buff,80);
-    //P_EM_RESET_N_1;
-    //R_ADC_Start();
+    R_UART0_Receive(w_buff,7);
+    delay_ms(100);
+//    P_EM_RESET_N_1;
+    R_TAU0_Channel4_Start();
+//    R_ADC_Start();
+//    RCC->CFGR &= ~0x0f000000;
+//    RCC->CFGR |= RCC_CFGR_MCO_HSE;
     while(1)
     {
         main_loop();
-        //adc_test();
+//        Key_Sw_Dete();
+//        adc_test();
     }
 }
 
@@ -90,7 +104,7 @@ void HardFault_Handler(void)
 void main_loop(void)
 {
  /********   WDT operate     *************************************/
-	R_WDT_Restart();
+//	R_WDT_Restart();
 
 //Issues commands such as initialization processing, write processing, and read processing at any time.
 
@@ -106,7 +120,7 @@ void main_loop(void)
 	
 /********   A/D convert     *************************************/
 
-	ad_operate_main();
+	ad_operate_main(); 
 	
 /********   key input     ***************************************/
 	sw_input_check();

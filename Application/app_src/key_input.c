@@ -8,11 +8,11 @@
 #include "access_flash.h"
 #include "anjou_test.h"
 
-#define	U1L_ZERO			((u1)0)
-#define	U1L_ONE				((u1)1)
-#define	U1L_TWO				((u1)2)
-#define	U2L_ZERO			((u2)0)
-#define	U2L_MAX				((u2)0xffffU)
+//#define	U1L_ZERO			((u1)0)
+//#define	U1L_ONE				((u1)1)
+//#define	U1L_TWO				((u1)2)
+//#define	U2L_ZERO			((u2)0)
+//#define	U2L_MAX				((u2)0xffffU)
 
 #define	U1L_MASK_CLOSE		((u1)0x80)		
 #define	U1L_MASK_STOP		((u1)0x02)		
@@ -50,7 +50,7 @@ static void check_any_key_input(void);
 //static u2 u2l_cnt_close_sw;	
 //static u1 u1l_f_clear_dis;		
 //static u1 u1l_f_3swreset_dis;	
-static u1 u1l_sw_jun = 0;			
+u1 u1l_sw_jun = 0;			
 
 static void sw_in_count(void)
 {
@@ -146,9 +146,9 @@ static void sw_all_off_ope(void){
 
 void sw_input_check(void)
 {
-	u1g_sw[0x00] = (u1)(~P_OPEN_SW & 0x01);			
-	u1g_sw[0x01] = (u1)(~P_CLOSE_SW & 0x01);			
-	u1g_sw[0x02] = (u1)(~P_STOP_SW & 0x01);			
+	u1g_sw[0x00] = P_OPEN_SW_Input();//(u1)(~P_OPEN_SW & 0x01);			
+	u1g_sw[0x01] = P_CLOSE_SW_Input();//(u1)(~P_CLOSE_SW & 0x01);			
+	u1g_sw[0x02] = P_STOP_SW_Input();//(u1)(~P_STOP_SW & 0x01);			
 #if 0
 	u1g_sw[0x00] = P_OPEN_SW & P_OPEN_SW_WIRED;	
 	u1g_sw[0x01] = P_CLOSE_SW & P_CLOSE_SW_WIRED;

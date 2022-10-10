@@ -104,7 +104,7 @@ void storage_init(void)
 
 STATIC bool read_storage_all(bool preset)
 {
-	u1 i;
+	u1 i = 0;
 	bool result = TRUE;
 
 	for (i = 0; i < N_STORAGE_ID; i++)

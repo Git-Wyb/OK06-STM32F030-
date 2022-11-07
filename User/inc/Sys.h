@@ -3,6 +3,8 @@
 
 #include "stm32f0xx.h"
 
+#define SYS_CLK 16000000
+
 typedef signed char s1;
 typedef unsigned char u1;
 typedef signed short int s2;
@@ -262,6 +264,14 @@ typedef union {							/*  —Ê–ËÂÄšs¥Õ¥é¥Ã¥·¥å¥Ç©`¥¿ */
 
 }	TYPE_FLASH_FACT_UNIT;
 
+typedef struct
+{
+    u1 flash_id;
+    u1 flash_cmd;
+    u1 flash_sta;
+    u1 flash_len;
+}FLASH_STU;
+
 typedef union{
     u1 Flag;
     struct
@@ -274,15 +284,15 @@ typedef union{
         u1 b5 : 1;
         u1 b6 : 1;
         u1 b7 : 1;
-    };
+    }Bit;
 }BaseFlagStruct;
 
 extern BaseFlagStruct Un_Flag0;
-#define flag_CaptureStart   Un_Flag0.b0
-#define flag_key_scan       Un_Flag0.b1
-#define flag_sw_sta         Un_Flag0.b2
-#define flag_tim17_en       Un_Flag0.b3
-#define flag_tim16_en       Un_Flag0.b4
+#define flag_CaptureStart   Un_Flag0.Bit.b0
+#define flag_key_scan       Un_Flag0.Bit.b1
+#define flag_sw_sta         Un_Flag0.Bit.b2
+#define flag_tim17_en       Un_Flag0.Bit.b3
+#define flag_tim16_en       Un_Flag0.Bit.b4
 
 void Init_IWDG(void);
 void delay_ms(u2 nms);

@@ -77,7 +77,7 @@ void Init_Timer16(void)
     GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AF;
     GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
     GPIO_InitStructure.GPIO_OType = GPIO_OType_PP;
-    GPIO_InitStructure.GPIO_PuPd = GPIO_PuPd_UP ;
+    GPIO_InitStructure.GPIO_PuPd = GPIO_PuPd_NOPULL;//GPIO_PuPd_UP;
     GPIO_Init(GPIOA, &GPIO_InitStructure);
 
     GPIO_PinAFConfig(GPIOA, GPIO_PinSource6, GPIO_AF_5);
@@ -125,15 +125,18 @@ void TIM16_IRQHandler(void)
     {
         TIM16->SR &= ~TIM_FLAG_Update;
 
-        TIM16->CCR1 = (u2)u2g_d_pwm;//624;//5464;//(u2)u2g_d_pwm;
+        TIM16->CCR1 = (u2)u2g_d_pwm;//1090;//763;//(u2)u2g_d_pwm;//624;//5464;//(u2)u2g_d_pwm;
     }
 }
 
 void R_TAU0_Channel4_Start(void)
 {
-    flag_tim16_en = 1;
-    TIM_Cmd(TIM16, ENABLE);
-    TIM_CtrlPWMOutputs(TIM16, ENABLE);
+    if(flag_tim16_en == 0)
+    {
+        flag_tim16_en = 1;
+        TIM_Cmd(TIM16, ENABLE);
+        TIM_CtrlPWMOutputs(TIM16, ENABLE);
+    }
 }
 void R_TAU0_Channel4_Stop(void)
 {
@@ -162,7 +165,7 @@ void Init_Timer17(void)
     GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AF;
     GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
     GPIO_InitStructure.GPIO_OType = GPIO_OType_PP;
-    GPIO_InitStructure.GPIO_PuPd = GPIO_PuPd_UP ;
+    GPIO_InitStructure.GPIO_PuPd = GPIO_PuPd_NOPULL;//GPIO_PuPd_UP ;
     GPIO_Init(GPIOA, &GPIO_InitStructure);
 
     GPIO_PinAFConfig(GPIOA, GPIO_PinSource7, GPIO_AF_5);
@@ -227,8 +230,8 @@ void R_TAU0_Channel6_Stop(void)
         flag_tim17_en = 0;
         TIM17->CNT = 0;
         TIM17->CCR1 = 0;
-        TIM_Cmd(TIM17, DISABLE);
         TIM_CtrlPWMOutputs(TIM17, DISABLE);
+        TIM_Cmd(TIM17, DISABLE);
     }
 }
 
@@ -285,32 +288,25 @@ void Init_Timer15(void)
 //两条边(当测量低电平宽度时),启动触发:下降边缘，捕获触发:上升边缘
 //计时器中断在计数开始时不产生,(计时器输出也没有改变)
 u1 overflow_cnt = 0;
-//u1 u1a_fg_current_pulse_over_flow;
+u1 in_cnt = 0;
 void TIM15_IRQHandler(void)
 {    
     if((TIM15->SR & TIM_FLAG_CC2) == TIM_SR_CC2IF)   //捕获标志
     {
         TIM15->SR &= ~TIM_FLAG_CC2;    //TIM_ClearITPendingBit
         if(flag_CaptureStart == 1)
-        {
-            if((TIM15->SR & TIM_FLAG_Update) == TIM_SR_UIF)
-            {
-                g_tau0_ch2_width = TIM15->CCR2 + 65535; //Read the capture counter which clears the TIM_FLAG_CC2
-//                if( u1g_mode != U1G_STOP_MODE )
-//                {
-//                    u1a_fg_current_pulse_over_flow = 1;
-//                }
-//                else
-//                {
-//                    u1a_fg_current_pulse_over_flow = 1;
-//                }
-            }
-            else    g_tau0_ch2_width = TIM15->CCR2;
+        {   
+            g_tau0_ch2_width = TIM15->CCR2 + 65535*overflow_cnt;
             overflow_cnt = 0;
             TIM15->CNT = 0;
             TIM15->CCR2 = 0;
             u4g_plus_length_buffer = g_tau0_ch2_width / 2;
-            int_input_encoder();
+            in_cnt++;
+            if(in_cnt>=2)
+            {
+                in_cnt = 2;
+                int_input_encoder();
+            }
             //int_input_encoder_test();
             TIM15->SR &= ~TIM_FLAG_Update;   //Clear Flag
         }
@@ -321,6 +317,7 @@ void TIM15_IRQHandler(void)
             TIM15->CNT = 0;
             TIM15->CCR2 = 0;
             overflow_cnt = 0;
+            in_cnt = 0;
             TIM15->SR &= ~TIM_FLAG_CC2; 
             TIM15->SR &= ~TIM_FLAG_Update;   //Clear Flag
             TIM_ITConfig(TIM15,TIM_IT_Update,ENABLE);   //更新中断
@@ -329,9 +326,12 @@ void TIM15_IRQHandler(void)
     else if((TIM15->SR & TIM_FLAG_Update) == TIM_SR_UIF && flag_CaptureStart == 1) //更新中断
     {
         overflow_cnt++;
-        if(overflow_cnt >= 50)
+//        u1a_fg_current_pulse_over_flow = 1;
+        if(overflow_cnt >= 5)
         {
             overflow_cnt = 0;
+            in_cnt = 0;
+            u1a_fg_current_pulse_over_flow = 0;
             flag_CaptureStart = 0;
             TIM15->SR &= ~TIM_FLAG_CC2;    //TIM_ClearITPendingBit
             TIM15->SR &= ~TIM_FLAG_Update;   //Clear Flag

@@ -25,8 +25,8 @@ void write_data_number_check(void)
 	else{}
 	
 	switch( u1g_flash_write_status ){
-		case U1_ALL_WRITE:				
-
+		case U1_ALL_WRITE:
+			flash_write_cmd = U1_ALL_WRITE;
 			store_storage_data(STORAGE_STUDY_LOAD, (u1 *) &u1g_flash_learndata_top);	
 			store_storage_data(STORAGE_RECORD_ERR1, (u1 *) &u1g_flash_errordata_top);
 			store_storage_data(STORAGE_RECORD_ERR2, (u1 *) &u1g_flash_errordata20_top);	
@@ -35,8 +35,8 @@ void write_data_number_check(void)
 			u1g_flash_write_status = 0;
 				
 			break;
-		case U1_E_SIZE_WRITE:			
-			
+		case U1_E_SIZE_WRITE:
+			flash_write_cmd = U1_E_SIZE_WRITE;
 			store_storage_data(STORAGE_RECORD_ERR1, (u1 *) &u1g_flash_errordata_top);	
 			store_storage_data(STORAGE_RECORD_ERR2, (u1 *) &u1g_flash_errordata20_top);	
 			store_storage_data(STORAGE_STUDY_BASE, (u1 *) &u1g_flash_hsizedata_top);	
@@ -49,8 +49,8 @@ void write_data_number_check(void)
 			u1g_flash_write_status = 0;
 
 			break;
-		case U1_SIZE_H_WRITE:			
-			
+		case U1_SIZE_H_WRITE:
+			flash_write_cmd = U1_SIZE_H_WRITE;
 			store_storage_data(STORAGE_RECORD_ERR1, (u1 *) &u1g_flash_errordata_top);
 			store_storage_data(STORAGE_RECORD_ERR2, (u1 *) &u1g_flash_errordata20_top);
 
@@ -59,26 +59,28 @@ void write_data_number_check(void)
 
 			break;
 		case U1_HUKA_WRITE:
+            flash_write_cmd = U1_HUKA_WRITE;
 			store_storage_data(STORAGE_STUDY_LOAD, (u1 *) &u1g_flash_learndata_top);	
-
+            
 			u1g_flash_write_status = 0;
 				
 			break;
 				
 		case U1_ERROR_1_WRITE:
-
+            flash_write_cmd = U1_ERROR_1_WRITE;
 			store_storage_data(STORAGE_RECORD_ERR1, (u1 *) &u1g_flash_errordata_top);
 				
 			u1g_flash_write_status = 0;
 			break;
 		case U1_SIZE_HUKA_WRITE:
-		
+            flash_write_cmd = U1_SIZE_HUKA_WRITE;
 			store_storage_data(STORAGE_STUDY_LOAD, (u1 *) &u1g_flash_learndata_top);	
 			store_storage_data(STORAGE_STUDY_BASE, (u1 *) &u1g_flash_hsizedata_top);	
 
 			u1g_flash_write_status = 0;	
 			break;
 		case U1_FACT_WRITE:
+            flash_write_cmd = U1_FACT_WRITE;
 			store_storage_data(STORAGE_FACTORY, (u1 *) &u1g_flash_factdata_top);	
 
 			u1g_flash_write_status = 0;
@@ -117,10 +119,10 @@ void check_flash_task(void)
 	
 		SW_input_cancel();
 //test		u1a_result = check_storage_cmd_idle();
-//		if( u1a_result == TRUE){
+		if( flash_write_cmd == 0){
 			rest_startup();	
-//		}
-//		else{}
+		}
+		else{}
 	}
 	else{}
 }

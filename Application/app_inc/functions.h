@@ -248,7 +248,7 @@ void ad_start_set(u1 u1_ad_num);		/*AD変換ポート設定*/
 u2 capture_ad_start(u1 u1_num,u1 u1_usedata_num);	/*変換データ取得*/
 u1 adopt_data_num_set(u1 num_adopt);	/*生値格納場所設定*/
 s2 absolute_calculate( s2 s2_num_cal1,s2 s2_num_cal2 );	/*2数の差の絶対値を返す*/
-
+extern u1 u1a_fg_current_pulse_over_flow;
 
 void a_vog_error_status_store(u1 u1_mode,u1 u1_sig,u1 u1_error_state);
 

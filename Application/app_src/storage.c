@@ -164,29 +164,195 @@ STATIC void set_storage_data(storage_id strg_id, const u1 *info)
 	}
 }
 
+void set_strg_mem_command(storage_id strg_id,u1 len)
+{
+    Flash_Write[strg_id].flash_id = strg_id;
+    Flash_Write[strg_id].flash_len = c_storage_id_size[strg_id];
+}
 
 void store_storage_data(storage_id strg_id, const u1 *info)
 {
-    u1 i = 0,j = 0;
+//    u1 i = 0,j = 0;
 	set_storage_data(strg_id, info);
-    
-    M24C16_Write(Storage_AddrBuf[strg_id],&storage[strg_id].strgdat[0],c_storage_id_size[strg_id]);
-    R_WDT_Restart();
-    M24C16_Read(Storage_AddrBuf[strg_id],&strg_verify.strgdat[0],c_storage_id_size[strg_id]);
-    R_WDT_Restart();
-    for(i=0; i<c_storage_id_size[strg_id]; i++)
-    {
-        if(strg_verify.strgdat[i] != storage[strg_id].strgdat[i])
-        {
-            j = 1;
-            break;
-        }
-    }
-    if(j == 1)  M24C16_Write(Storage_AddrBuf[strg_id],&storage[strg_id].strgdat[0],c_storage_id_size[strg_id]);
-    j = 0;
-    R_WDT_Restart();
+    set_strg_mem_command(strg_id,c_storage_id_size[strg_id]);
+//    M24C16_Write(Storage_AddrBuf[strg_id],&storage[strg_id].strgdat[0],c_storage_id_size[strg_id]);
+//    R_WDT_Restart();
+//    M24C16_Read(Storage_AddrBuf[strg_id],&strg_verify.strgdat[0],c_storage_id_size[strg_id]);
+//    R_WDT_Restart();
+//    for(i=0; i<c_storage_id_size[strg_id]; i++)
+//    {
+//        if(strg_verify.strgdat[i] != storage[strg_id].strgdat[i])
+//        {
+//            j = 1;
+//            break;
+//        }
+//    }
+//    if(j == 1)  M24C16_Write(Storage_AddrBuf[strg_id],&storage[strg_id].strgdat[0],c_storage_id_size[strg_id]);
+//    j = 0;
+//    R_WDT_Restart();
 //test	set_strg_mem_command(STRGMEM_WRITE, strg_id);	
 }
+
+
+static u1 w_i = 0;
+static u1 w_j = 0;
+static u1 addr_offset = 0;
+u1 r_byte = 0;
+/*
+[0]: 0-79;
+[1]: 80-159; 
+[2]: 160-239; 
+[3]: 240-319; 
+[4]: 320-399;
+*/
+void storage_memory_handler(void)
+{
+    switch(flash_write_cmd)
+    {
+        case U1_ALL_WRITE://[0][1][2][3]
+            addr_offset = w_i + w_j*80;
+            M24C16_Write(addr_offset,&storage[w_j].strgdat[w_i],1);
+            M24C16_Read(addr_offset,&r_byte,1);
+            if(r_byte != storage[w_j].strgdat[w_i])   M24C16_Write(addr_offset,&storage[w_j].strgdat[w_i],1);
+            w_i++;
+            if(w_i >= Flash_Write[w_j].flash_len)
+            {
+                w_i = 0;
+                w_j++;
+            }
+            if(w_j >= 4) 
+            {
+                w_i = 0;
+                w_j = 0;
+                addr_offset = 0;
+                flash_write_cmd = 0;
+            }
+            break;
+            
+        case U1_E_SIZE_WRITE://[1][2][3]
+            addr_offset = w_i+80 + w_j*80;
+            M24C16_Write(addr_offset,&storage[w_j+1].strgdat[w_i],1);
+            M24C16_Read(addr_offset,&r_byte,1);
+            if(r_byte != storage[w_j+1].strgdat[w_i])   M24C16_Write(addr_offset,&storage[w_j+1].strgdat[w_i],1);
+            w_i++;
+            if(w_i >= Flash_Write[w_j+1].flash_len)
+            {
+                w_i = 0;
+                w_j++;
+            }
+            if(w_j >= 3) 
+            {
+                w_i = 0;
+                w_j = 0;
+                addr_offset = 0;
+                flash_write_cmd = 0;
+            }
+            break;
+            
+        case U1_SIZE_H_WRITE://[1][2]
+            addr_offset = w_i+80 + w_j*80;
+            M24C16_Write(addr_offset,&storage[w_j+1].strgdat[w_i],1);
+            M24C16_Read(addr_offset,&r_byte,1);
+            if(r_byte != storage[w_j+1].strgdat[w_i])   M24C16_Write(addr_offset,&storage[w_j+1].strgdat[w_i],1);
+            w_i++;
+            if(w_i >= Flash_Write[w_j+1].flash_len)
+            {
+                w_i = 0;
+                w_j++;
+            }
+            if(w_j >= 2) 
+            {
+                w_i = 0;
+                w_j = 0;
+                addr_offset = 0;
+                flash_write_cmd = 0;
+            }
+            break;
+            
+        case U1_HUKA_WRITE://[0]
+            addr_offset = w_i;
+            M24C16_Write(addr_offset,&storage[w_j].strgdat[w_i],1);
+            M24C16_Read(addr_offset,&r_byte,1);
+            if(r_byte != storage[w_j].strgdat[w_i])   M24C16_Write(addr_offset,&storage[w_j].strgdat[w_i],1);
+            w_i++;
+            if(w_i >= Flash_Write[w_j].flash_len)
+            {
+                w_i = 0;
+                w_j++;
+            }
+            if(w_j >= 1) 
+            {
+                w_i = 0;
+                w_j = 0;
+                addr_offset = 0;
+                flash_write_cmd = 0;
+            }
+            break;
+            
+        case U1_ERROR_1_WRITE://[1]
+            addr_offset = w_i+80;
+            M24C16_Write(addr_offset,&storage[w_j+1].strgdat[w_i],1);
+            M24C16_Read(addr_offset,&r_byte,1);
+            if(r_byte != storage[w_j+1].strgdat[w_i])   M24C16_Write(addr_offset,&storage[w_j+1].strgdat[w_i],1);
+            w_i++;
+            if(w_i >= Flash_Write[w_j+1].flash_len)
+            {
+                w_i = 0;
+                w_j++;
+            }
+            if(w_j >= 1) 
+            {
+                w_i = 0;
+                w_j = 0;
+                addr_offset = 0;
+                flash_write_cmd = 0;
+            }
+            break;
+            
+        case U1_SIZE_HUKA_WRITE://[0][3]
+            addr_offset = w_i + w_j*240;
+            M24C16_Write(addr_offset,&storage[w_j*3].strgdat[w_i],1);
+            M24C16_Read(addr_offset,&r_byte,1);
+            if(r_byte != storage[w_j*3].strgdat[w_i])   M24C16_Write(addr_offset,&storage[w_j*3].strgdat[w_i],1);
+            w_i++;
+            if(w_i >= Flash_Write[w_j*3].flash_len)
+            {
+                w_i = 0;
+                w_j++;
+            }
+            if(w_j >= 2) 
+            {
+                w_i = 0;
+                w_j = 0;
+                addr_offset = 0;
+                flash_write_cmd = 0;
+            }
+            break;
+            
+        case U1_FACT_WRITE://[4]
+            addr_offset = w_i + 320;
+            M24C16_Write(addr_offset,&storage[w_j+4].strgdat[w_i],1);
+            M24C16_Read(addr_offset,&r_byte,1);
+            if(r_byte != storage[w_j+4].strgdat[w_i])   M24C16_Write(addr_offset,&storage[w_j+4].strgdat[w_i],1);
+            w_i++;
+            if(w_i >= Flash_Write[w_j+4].flash_len)
+            {
+                w_i = 0;
+                w_j++;
+            }
+            if(w_j >= 1) 
+            {
+                w_i = 0;
+                w_j = 0;
+                addr_offset = 0;
+                flash_write_cmd = 0;
+            }
+            break;
+    }
+}
+
+
+
 
 
 /************************************************/

@@ -2,7 +2,7 @@
 .\objects\motion_command.o: .\User\inc\Sys.h
 .\objects\motion_command.o: .\Libraries\CMSIS\Include\stm32f0xx.h
 .\objects\motion_command.o: .\Libraries\CMSIS\Include\core_cm0.h
-.\objects\motion_command.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdint.h
+.\objects\motion_command.o: D:\Keil_v5.23\ARM\ARMCC\Bin\..\include\stdint.h
 .\objects\motion_command.o: .\Libraries\CMSIS\Include\core_cmInstr.h
 .\objects\motion_command.o: .\Libraries\CMSIS\Include\core_cmFunc.h
 .\objects\motion_command.o: .\Libraries\CMSIS\Include\system_stm32f0xx.h
@@ -33,5 +33,5 @@
 .\objects\motion_command.o: .\Application\app_inc\constants.h
 .\objects\motion_command.o: .\Application\app_inc\comm_uart.h
 .\objects\motion_command.o: .\Application\app_inc\functions.h
-.\objects\motion_command.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\string.h
-.\objects\motion_command.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdlib.h
+.\objects\motion_command.o: D:\Keil_v5.23\ARM\ARMCC\Bin\..\include\string.h
+.\objects\motion_command.o: D:\Keil_v5.23\ARM\ARMCC\Bin\..\include\stdlib.h

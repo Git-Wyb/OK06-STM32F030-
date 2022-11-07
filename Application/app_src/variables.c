@@ -140,7 +140,8 @@ TYPE_FLASH_ERROR_UNIT xng_flash_error_data = {0};
 TYPE_FLASH_ERROR_2_UNIT xng_flash_error_20_data = {0};	
 TYPE_FLASH_HSIZE_UNIT xng_flash_Hsize_series = {0};
 TYPE_FLASH_FACT_UNIT xng_flash_fact_series = {0};	
-
+FLASH_STU Flash_Write[5] = {0};
+u1 flash_write_cmd = 0;
 
 u2 u2g_soft_clear_timer_counter = 0;		
 
@@ -156,7 +157,8 @@ u1 u1g_f_timeover_anjo_test = 0;
 
 u1 u1g_section_kahuka_occured = 0;			
 
-u1 u1g_flash_write_status = 0;				
+u1 u1g_flash_write_status = 0;	
+
 u1 u1g_huka_ad_value = 0;					
 
 u1 u1g_Fg_previous_kahuka_upper = 0;			

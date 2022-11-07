@@ -1,9 +1,9 @@
 .\objects\access_flash.o: Application\app_src\access_flash.c
-.\objects\access_flash.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\string.h
+.\objects\access_flash.o: D:\Keil_v5.23\ARM\ARMCC\Bin\..\include\string.h
 .\objects\access_flash.o: .\User\inc\Sys.h
 .\objects\access_flash.o: .\Libraries\CMSIS\Include\stm32f0xx.h
 .\objects\access_flash.o: .\Libraries\CMSIS\Include\core_cm0.h
-.\objects\access_flash.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdint.h
+.\objects\access_flash.o: D:\Keil_v5.23\ARM\ARMCC\Bin\..\include\stdint.h
 .\objects\access_flash.o: .\Libraries\CMSIS\Include\core_cmInstr.h
 .\objects\access_flash.o: .\Libraries\CMSIS\Include\core_cmFunc.h
 .\objects\access_flash.o: .\Libraries\CMSIS\Include\system_stm32f0xx.h
@@ -30,7 +30,7 @@
 .\objects\access_flash.o: .\Libraries\STM32F0xx_StdPeriph_Driver\inc\stm32f0xx_usart.h
 .\objects\access_flash.o: .\Libraries\STM32F0xx_StdPeriph_Driver\inc\stm32f0xx_wwdg.h
 .\objects\access_flash.o: .\Libraries\STM32F0xx_StdPeriph_Driver\inc\stm32f0xx_misc.h
-.\objects\access_flash.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdlib.h
+.\objects\access_flash.o: D:\Keil_v5.23\ARM\ARMCC\Bin\..\include\stdlib.h
 .\objects\access_flash.o: .\Application\app_inc\variables.h
 .\objects\access_flash.o: .\Application\app_inc\constants.h
 .\objects\access_flash.o: .\Application\app_inc\comm_uart.h

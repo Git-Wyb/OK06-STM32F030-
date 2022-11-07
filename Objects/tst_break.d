@@ -2,7 +2,7 @@
 .\objects\tst_break.o: .\User\inc\Sys.h
 .\objects\tst_break.o: .\Libraries\CMSIS\Include\stm32f0xx.h
 .\objects\tst_break.o: .\Libraries\CMSIS\Include\core_cm0.h
-.\objects\tst_break.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdint.h
+.\objects\tst_break.o: D:\Keil_v5.23\ARM\ARMCC\Bin\..\include\stdint.h
 .\objects\tst_break.o: .\Libraries\CMSIS\Include\core_cmInstr.h
 .\objects\tst_break.o: .\Libraries\CMSIS\Include\core_cmFunc.h
 .\objects\tst_break.o: .\Libraries\CMSIS\Include\system_stm32f0xx.h
@@ -37,6 +37,6 @@
 .\objects\tst_break.o: .\Application\app_inc\functions.h
 .\objects\tst_break.o: .\Application\app_inc\input_encoder.h
 .\objects\tst_break.o: .\Application\app_inc\a_data_exchange.h
-.\objects\tst_break.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\string.h
-.\objects\tst_break.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdlib.h
+.\objects\tst_break.o: D:\Keil_v5.23\ARM\ARMCC\Bin\..\include\string.h
+.\objects\tst_break.o: D:\Keil_v5.23\ARM\ARMCC\Bin\..\include\stdlib.h
 .\objects\tst_break.o: .\Application\app_inc\tst_break.h

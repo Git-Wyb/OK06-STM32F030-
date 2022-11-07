@@ -1,4 +1,3 @@
-
 #include "Sys.h"
 #include "Timer.h"
 #include "variables.h"
@@ -24,7 +23,7 @@ static u4 u4l_high_length = 0;
 static u4 u4l_low_length = 0;
 
 u1 u1g_kirikae = 0;
-
+u1 u1a_fg_current_pulse_over_flow = 0;
 static void change_pulse_width_to_rpm(void); 
 static void check_abnormal_pulse(void);
 static void set_pwm_d(void);
@@ -38,14 +37,7 @@ static void p_in_motor_stop(void);
 static void no_direct_p_in(void);
 
 void int_input_encoder(void){
-
-	u1 u1a_fg_current_pulse_over_flow = 0;	
-	/* u1 u1a_fg_imfb_in; */
-
-	//R_TAU0_Channel2_Get_PulseWidth(&u4g_plus_length_buffer);	
-	u1a_fg_current_pulse_over_flow = 0;		
-	/* u1a_fg_imfb_in = 0; */
-
+    
 	if( (u4g_plus_length_buffer <= TOO_S_PULSE_LENGTH) && (u1a_fg_current_pulse_over_flow == 0) ){
 
 	}
@@ -61,7 +53,7 @@ void int_input_encoder(void){
 				u1g_f_input_pulse = 1;
 				ope_pulse_count_main();			
 				u2g_c_interval_plus = 0x0000;
-				Fg_final_state = P_ENCODER_B;	
+				Fg_final_state = P_ENCODER_B;         
 			/* } */
 			/* else{}	 */
 
@@ -71,15 +63,15 @@ void int_input_encoder(void){
 				u4g_plus_length  = (u4)u4l_low_length + (u4)u4l_high_length;
 			}
 			check_abnormal_pulse();
-			u4l_low_length = 0;
+            u4l_low_length = 0;
 			u4l_high_length = 0;
-
-			change_pulse_width_to_rpm();	
+            
+			change_pulse_width_to_rpm();          
 		}
 		else{
 			if( u1a_fg_current_pulse_over_flow == 0){
 				u4l_low_length = u4g_plus_length_buffer;
-				Fg_mid_state = P_ENCODER_B;		
+				Fg_mid_state = P_ENCODER_B;	              
 			}
 			else{
 				u4l_low_length = 0xfffffffe;
@@ -231,29 +223,35 @@ static void plus_operate_main(void){
 	static u1 Fg_before_count = 0;
 
 	static s2 s2l_p_differ_before = 0;
-	
+                               
 	s2g_p_differ_current = (s2)(u2g_standard_plus_length) - (s2)(u2g_d_rpm_current);
 
 	if( s2g_p_differ_current < 0 ){
 		u1l_rev_pwm_f = U1_SPEED_DOWN;
 	}
 	else if( s2g_p_differ_current > 0 ){
-		u1l_rev_pwm_f = U1_SPEED_UP;
+		u1l_rev_pwm_f = U1_SPEED_UP;//1
 	}
 	else{
 		u1l_rev_pwm_f = U1_SPEED_BEST;
-	}
+	}       
+                                                                  
 	s4l_culc_unit1 = (s4)( (s4)( s2g_p_differ_current - s2l_p_differ_before ) * KP ) ;
+    
+        
 	s4l_culc_unit2 = (s4)( (s4)s2g_p_differ_current * KI );	
-
-	s4l_d_mv_buffer = (s4)( (s4l_culc_unit1 + s4l_culc_unit2) / KETA_10 );	
+    
+                                              
+	s4l_d_mv_buffer = (s4)( (s4l_culc_unit1 + s4l_culc_unit2) / KETA_10 );
+	
+                                                       
 	if( ( s4l_d_mv_buffer < 0 ) && ( s4l_d_mv_buffer > UNIT1_UNIT2_DATA_MINUS_100 ) ){
 		
 		if( Fg_before_count == 1){
 			u1g_counter_minus ++;
-			Fg_before_count = 1;
+			Fg_before_count = 1;       
 			if( u1g_counter_minus > UNIT1_UNIT2_DATA_PLS_25 ){
-				s4l_culc_unit1 = UNIT1_UNIT2_DATA_MINUS_1000;
+				s4l_culc_unit1 = UNIT1_UNIT2_DATA_MINUS_1000;//-1000
 				s4l_culc_unit2 = 0;
 				u1g_counter_minus = 0;
 			}	
@@ -269,14 +267,19 @@ static void plus_operate_main(void){
 		u1g_counter_minus = 0;
 		
 	}
-
+                                                                //100
 	s4l_d_mv_buffer = (s4)( (s4l_culc_unit1 + s4l_culc_unit2) / KETA_100 );	
+    
+                           
 	s4l_d_mv_buffer2 = (s4)(D_PWM_DUTY_100 * (s4)s4l_d_mv_buffer);
+    
+                                                                    //100
 	s4g_d_mv = (s4)((s4l_d_mv_buffer2 + s4g_d_mv_loss_number) / (s4)KETA_100);
-
+    
+                                                                    //100
 	s4g_d_mv_loss_number = s4l_d_mv_buffer2 - (s4)((s4)s4g_d_mv * (s4)KETA_100);
 
-	s2l_p_differ_before = s2g_p_differ_current; 
+	s2l_p_differ_before = s2g_p_differ_current;
 
 	if( ( u2g_d_rpm_current >= u2g_standard_plus_length )  ){
 			
@@ -288,16 +291,16 @@ static void plus_operate_main(void){
 		if( u1l_rev_pwm_f == U1_SPEED_DOWN ){
 		}
 		else{	/* SPEED UP OR BEST */
-			s4g_d_mv = (s4)SOFT_START_20MS_LESS_DUTY;
+			s4g_d_mv = (s4)SOFT_START_20MS_LESS_DUTY;//18
 		}
 		s2l_p_differ_before = 0;
 	}
 	else{}
 	
-	if( s4g_d_mv > MAX_CHANGE){
+	if( s4g_d_mv > MAX_CHANGE){//130
 		s4g_d_mv = MAX_CHANGE;
 	}
-	else if( s4g_d_mv < MIN_CHANGE){
+	else if( s4g_d_mv < MIN_CHANGE){//-130
 		s4g_d_mv = MIN_CHANGE;
 	}
 	else{}
@@ -345,7 +348,7 @@ static void p_in_motor_stop(void){
 						(s2g_cnt_plus <= (s2)(0 - U2L_JOUGEN_KITEI_AREA)) )
 						{
 							Fg_f_upper_start = 0;
-							if( (Fg_f_upper_huka == 0) )
+							if(Fg_f_upper_huka == 0)
 								{
 									Fg_f_no_position = 1;
 								}
@@ -458,13 +461,13 @@ static void zene_pulse_count(void){
 		{
 			no_direct_p_in();			
 		}
-	else if( Fg_final_state == P_DIRECTION )
+	else if( Fg_final_state == P_DIRECTION )//close
 		{
 			Fg_f_direction_p = 1;			
 			ope_add_p_c();					
 			u1g_c_move_m_p = 0x00;			
 		}
-	else
+	else    //open
 		{
 			Fg_f_direction_p = 0;		
 			ope_redu_p_c();				
@@ -599,7 +602,7 @@ void pulse_interval_check(void){
 }
 
 
-u1 cnt = 0;
+//u1 cnt = 0;
 static void change_pulse_width_to_rpm(void){
 			
 	u4 u4a_d_rpm_buffer = 0;
@@ -607,26 +610,6 @@ static void change_pulse_width_to_rpm(void){
 	u4a_d_rpm_buffer = 0;
 
 	u4a_d_rpm_buffer = (u4)u4g_plus_length;
-	u4a_d_rpm_buffer = (u4)((u4)PW_TO_RPM / u4a_d_rpm_buffer);
+	u4a_d_rpm_buffer = (u4)((u4)PW_TO_RPM / u4a_d_rpm_buffer);//PW_TO_RPM
 	u2g_d_rpm_current = (u2)u4a_d_rpm_buffer;		 /* rpm */
-    if(u2g_d_rpm_current > 1000)
-    {
-        cnt = 1;
-    }
-    if(u2g_d_rpm_current > 2000)
-    {
-        cnt = 2;
-    }
-    if(u2g_d_rpm_current > 3000)
-    {
-        cnt = 3;
-    }
-    if(u2g_d_rpm_current > 4000)
-    {
-        cnt = 4;
-    }
-    if(u2g_d_rpm_current > 5000)
-    {
-        cnt = 5;
-    }
 }

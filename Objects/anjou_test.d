@@ -2,7 +2,7 @@
 .\objects\anjou_test.o: .\User\inc\Sys.h
 .\objects\anjou_test.o: .\Libraries\CMSIS\Include\stm32f0xx.h
 .\objects\anjou_test.o: .\Libraries\CMSIS\Include\core_cm0.h
-.\objects\anjou_test.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdint.h
+.\objects\anjou_test.o: D:\Keil_v5.23\ARM\ARMCC\Bin\..\include\stdint.h
 .\objects\anjou_test.o: .\Libraries\CMSIS\Include\core_cmInstr.h
 .\objects\anjou_test.o: .\Libraries\CMSIS\Include\core_cmFunc.h
 .\objects\anjou_test.o: .\Libraries\CMSIS\Include\system_stm32f0xx.h
@@ -33,7 +33,7 @@
 .\objects\anjou_test.o: .\Application\app_inc\comm_uart.h
 .\objects\anjou_test.o: .\Application\app_inc\variables.h
 .\objects\anjou_test.o: .\Application\app_inc\constants.h
-.\objects\anjou_test.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\string.h
+.\objects\anjou_test.o: D:\Keil_v5.23\ARM\ARMCC\Bin\..\include\string.h
 .\objects\anjou_test.o: .\Application\app_inc\access_flash.h
 .\objects\anjou_test.o: .\Application\app_inc\a_data_exchange.h
 .\objects\anjou_test.o: .\Application\app_inc\flash_data_read.h

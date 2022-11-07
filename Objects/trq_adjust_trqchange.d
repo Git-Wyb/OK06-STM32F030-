@@ -1,9 +1,9 @@
 .\objects\trq_adjust_trqchange.o: Application\app_src\trq_adjust_trqchange.c
-.\objects\trq_adjust_trqchange.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\string.h
+.\objects\trq_adjust_trqchange.o: D:\Keil_v5.23\ARM\ARMCC\Bin\..\include\string.h
 .\objects\trq_adjust_trqchange.o: .\User\inc\Sys.h
 .\objects\trq_adjust_trqchange.o: .\Libraries\CMSIS\Include\stm32f0xx.h
 .\objects\trq_adjust_trqchange.o: .\Libraries\CMSIS\Include\core_cm0.h
-.\objects\trq_adjust_trqchange.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdint.h
+.\objects\trq_adjust_trqchange.o: D:\Keil_v5.23\ARM\ARMCC\Bin\..\include\stdint.h
 .\objects\trq_adjust_trqchange.o: .\Libraries\CMSIS\Include\core_cmInstr.h
 .\objects\trq_adjust_trqchange.o: .\Libraries\CMSIS\Include\core_cmFunc.h
 .\objects\trq_adjust_trqchange.o: .\Libraries\CMSIS\Include\system_stm32f0xx.h
@@ -30,7 +30,7 @@
 .\objects\trq_adjust_trqchange.o: .\Libraries\STM32F0xx_StdPeriph_Driver\inc\stm32f0xx_usart.h
 .\objects\trq_adjust_trqchange.o: .\Libraries\STM32F0xx_StdPeriph_Driver\inc\stm32f0xx_wwdg.h
 .\objects\trq_adjust_trqchange.o: .\Libraries\STM32F0xx_StdPeriph_Driver\inc\stm32f0xx_misc.h
-.\objects\trq_adjust_trqchange.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdlib.h
+.\objects\trq_adjust_trqchange.o: D:\Keil_v5.23\ARM\ARMCC\Bin\..\include\stdlib.h
 .\objects\trq_adjust_trqchange.o: .\Application\app_inc\variables.h
 .\objects\trq_adjust_trqchange.o: .\Application\app_inc\constants.h
 .\objects\trq_adjust_trqchange.o: .\Application\app_inc\comm_uart.h

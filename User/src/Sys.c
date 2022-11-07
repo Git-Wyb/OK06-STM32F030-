@@ -43,11 +43,11 @@ void R_WDT_Restart(void)
 {
     IWDG_ReloadCounter();
 }
-
+//SystemCoreClock
 void Init_Delay(void)
 {
     SysTick_CLKSourceConfig(SysTick_CLKSource_HCLK_Div8);	//选择外部时钟  HCLK/8
-	fac_us = SystemCoreClock / 8000000;				//为系统时钟的1/8
+	fac_us = SYS_CLK / 8000000;				//为系统时钟的1/8
     fac_ms = (u2)fac_us * 1000;
 }
 

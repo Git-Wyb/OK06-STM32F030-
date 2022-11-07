@@ -2,7 +2,7 @@
 .\objects\select_mode.o: .\User\inc\Sys.h
 .\objects\select_mode.o: .\Libraries\CMSIS\Include\stm32f0xx.h
 .\objects\select_mode.o: .\Libraries\CMSIS\Include\core_cm0.h
-.\objects\select_mode.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdint.h
+.\objects\select_mode.o: D:\Keil_v5.23\ARM\ARMCC\Bin\..\include\stdint.h
 .\objects\select_mode.o: .\Libraries\CMSIS\Include\core_cmInstr.h
 .\objects\select_mode.o: .\Libraries\CMSIS\Include\core_cmFunc.h
 .\objects\select_mode.o: .\Libraries\CMSIS\Include\system_stm32f0xx.h

@@ -2,7 +2,7 @@
 .\objects\ecu_test.o: .\User\inc\Sys.h
 .\objects\ecu_test.o: .\Libraries\CMSIS\Include\stm32f0xx.h
 .\objects\ecu_test.o: .\Libraries\CMSIS\Include\core_cm0.h
-.\objects\ecu_test.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdint.h
+.\objects\ecu_test.o: D:\Keil_v5.23\ARM\ARMCC\Bin\..\include\stdint.h
 .\objects\ecu_test.o: .\Libraries\CMSIS\Include\core_cmInstr.h
 .\objects\ecu_test.o: .\Libraries\CMSIS\Include\core_cmFunc.h
 .\objects\ecu_test.o: .\Libraries\CMSIS\Include\system_stm32f0xx.h

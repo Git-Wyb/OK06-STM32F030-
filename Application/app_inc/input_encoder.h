@@ -68,7 +68,7 @@
 #define NORMAL_21MS_MORE_DUTY		109		/* パルス幅21ms以上のソフトスタート後DUTY */
 #define NORMAL_28MS_MORE_DUTY		50		/* パルス幅28ms以上のソフトスタート後DUTY */
 #define SOFT_START_20MS_LESS_DUTY	18		/* パルス幅20ms未満のソフトスタート中DUTY */
-#define SOFT_START_20MS_MORE_DUTY	105		/* パルス幅20ms以上のソフトスタート中DUTY */
+#define SOFT_START_20MS_MORE_DUTY	36		/* パルス幅20ms以上のソフトスタート中DUTY */
 
 /* extern u1 u1g_c_no_plus;					ﾃﾞｭｰﾃｨｰ追加ｲﾝﾀｰﾊﾞﾙｶｳﾝﾀ */
 /* extern u2 u2g_c_interval_plus;				パルスが来ない時間をカウント */
@@ -89,7 +89,6 @@ extern u4 u4g_d_rpm_before;
 extern u2 u2g_d_rpm_current;
 extern u1 u1g_cnt_change_mode;  		/*停＋開閉SW長押し時間 上限リセット*/
 /* extern u1 u1g_c_check_out;						ﾁｪｯｸ用出力時間ｶｳﾝﾀ */
-
 
 #endif
 

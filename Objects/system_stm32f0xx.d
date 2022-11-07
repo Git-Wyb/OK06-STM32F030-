@@ -1,7 +1,7 @@
 .\objects\system_stm32f0xx.o: Libraries\CMSIS\Include\system_stm32f0xx.c
 .\objects\system_stm32f0xx.o: Libraries\CMSIS\Include\stm32f0xx.h
 .\objects\system_stm32f0xx.o: Libraries\CMSIS\Include\core_cm0.h
-.\objects\system_stm32f0xx.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdint.h
+.\objects\system_stm32f0xx.o: D:\Keil_v5.23\ARM\ARMCC\Bin\..\include\stdint.h
 .\objects\system_stm32f0xx.o: .\Libraries\CMSIS\Include\core_cmInstr.h
 .\objects\system_stm32f0xx.o: .\Libraries\CMSIS\Include\core_cmFunc.h
 .\objects\system_stm32f0xx.o: Libraries\CMSIS\Include\system_stm32f0xx.h

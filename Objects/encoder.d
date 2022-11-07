@@ -2,7 +2,7 @@
 .\objects\encoder.o: .\User\inc\Sys.h
 .\objects\encoder.o: .\Libraries\CMSIS\Include\stm32f0xx.h
 .\objects\encoder.o: .\Libraries\CMSIS\Include\core_cm0.h
-.\objects\encoder.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdint.h
+.\objects\encoder.o: D:\Keil_v5.23\ARM\ARMCC\Bin\..\include\stdint.h
 .\objects\encoder.o: .\Libraries\CMSIS\Include\core_cmInstr.h
 .\objects\encoder.o: .\Libraries\CMSIS\Include\core_cmFunc.h
 .\objects\encoder.o: .\Libraries\CMSIS\Include\system_stm32f0xx.h
@@ -37,7 +37,7 @@
 .\objects\encoder.o: .\Application\app_inc\functions.h
 .\objects\encoder.o: .\Application\app_inc\input_encoder.h
 .\objects\encoder.o: .\Application\app_inc\a_data_exchange.h
-.\objects\encoder.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\string.h
-.\objects\encoder.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdlib.h
+.\objects\encoder.o: D:\Keil_v5.23\ARM\ARMCC\Bin\..\include\string.h
+.\objects\encoder.o: D:\Keil_v5.23\ARM\ARMCC\Bin\..\include\stdlib.h
 .\objects\encoder.o: .\Application\app_inc\tst_break.h
 .\objects\encoder.o: .\Application\app_inc\anjou_test.h

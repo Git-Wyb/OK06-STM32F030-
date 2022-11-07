@@ -2,7 +2,7 @@
 .\objects\mode_process.o: .\User\inc\Sys.h
 .\objects\mode_process.o: .\Libraries\CMSIS\Include\stm32f0xx.h
 .\objects\mode_process.o: .\Libraries\CMSIS\Include\core_cm0.h
-.\objects\mode_process.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdint.h
+.\objects\mode_process.o: D:\Keil_v5.23\ARM\ARMCC\Bin\..\include\stdint.h
 .\objects\mode_process.o: .\Libraries\CMSIS\Include\core_cmInstr.h
 .\objects\mode_process.o: .\Libraries\CMSIS\Include\core_cmFunc.h
 .\objects\mode_process.o: .\Libraries\CMSIS\Include\system_stm32f0xx.h

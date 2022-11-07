@@ -2,7 +2,7 @@
 .\objects\uart.o: .\User\inc\Uart.h
 .\objects\uart.o: .\Libraries\CMSIS\Include\stm32f0xx.h
 .\objects\uart.o: .\Libraries\CMSIS\Include\core_cm0.h
-.\objects\uart.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdint.h
+.\objects\uart.o: D:\Keil_v5.23\ARM\ARMCC\Bin\..\include\stdint.h
 .\objects\uart.o: .\Libraries\CMSIS\Include\core_cmInstr.h
 .\objects\uart.o: .\Libraries\CMSIS\Include\core_cmFunc.h
 .\objects\uart.o: .\Libraries\CMSIS\Include\system_stm32f0xx.h

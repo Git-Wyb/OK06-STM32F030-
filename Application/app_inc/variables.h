@@ -806,7 +806,8 @@ extern u1 u1g_2ope_3ope_signal;
 
 extern u1 u1g_Fg_previous_kahuka_upper;	
 extern s2 s2g_previous_kahuka_position;	
-
+extern FLASH_STU Flash_Write[5];
+extern u1 flash_write_cmd;
 //#endif
 
 extern u1 u1g_limit_ad;

@@ -2,7 +2,7 @@
 .\objects\select_signal.o: .\User\inc\Sys.h
 .\objects\select_signal.o: .\Libraries\CMSIS\Include\stm32f0xx.h
 .\objects\select_signal.o: .\Libraries\CMSIS\Include\core_cm0.h
-.\objects\select_signal.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdint.h
+.\objects\select_signal.o: D:\Keil_v5.23\ARM\ARMCC\Bin\..\include\stdint.h
 .\objects\select_signal.o: .\Libraries\CMSIS\Include\core_cmInstr.h
 .\objects\select_signal.o: .\Libraries\CMSIS\Include\core_cmFunc.h
 .\objects\select_signal.o: .\Libraries\CMSIS\Include\system_stm32f0xx.h
@@ -33,8 +33,8 @@
 .\objects\select_signal.o: .\Application\app_inc\constants.h
 .\objects\select_signal.o: .\Application\app_inc\comm_uart.h
 .\objects\select_signal.o: .\Application\app_inc\functions.h
-.\objects\select_signal.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\string.h
-.\objects\select_signal.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdlib.h
+.\objects\select_signal.o: D:\Keil_v5.23\ARM\ARMCC\Bin\..\include\string.h
+.\objects\select_signal.o: D:\Keil_v5.23\ARM\ARMCC\Bin\..\include\stdlib.h
 .\objects\select_signal.o: .\Application\app_inc\access_flash.h
 .\objects\select_signal.o: .\Application\app_inc\def_local.h
 .\objects\select_signal.o: .\Application\app_inc\a_data_exchange.h

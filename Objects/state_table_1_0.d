@@ -4,7 +4,7 @@
 .\objects\state_table_1_0.o: .\Application\app_inc\comm_uart.h
 .\objects\state_table_1_0.o: .\Libraries\CMSIS\Include\stm32f0xx.h
 .\objects\state_table_1_0.o: .\Libraries\CMSIS\Include\core_cm0.h
-.\objects\state_table_1_0.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdint.h
+.\objects\state_table_1_0.o: D:\Keil_v5.23\ARM\ARMCC\Bin\..\include\stdint.h
 .\objects\state_table_1_0.o: .\Libraries\CMSIS\Include\core_cmInstr.h
 .\objects\state_table_1_0.o: .\Libraries\CMSIS\Include\core_cmFunc.h
 .\objects\state_table_1_0.o: .\Libraries\CMSIS\Include\system_stm32f0xx.h

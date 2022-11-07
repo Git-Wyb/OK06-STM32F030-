@@ -39,27 +39,17 @@ static void soft_lock_signal(void);
 void variable_setup(void);
 static void main_loop(void);
 
-u1 w_buff[10] = {0};
-//typedef union{
-//    u2 towbyte;
-//    struct{
-//        u2 bt0:1;
-//        u2 bt1:1;
-//        u2 bt2:1;
-//        u2 bt3:1;
-//        u2 bt4:1;
-//        u2 bt5:1;
-//        u2 bt6:1;
-//        u2 bt7:1;
-//        u2 bt8:1;
-//    }bit; 
-//}TOWBYTE;
+u1 w_buff[90] = {11,1,2,3,4,5,6,7,8,9,10};
+u1 r_buff[90] = {0};
+u1 datat = 55;
+u1 readata = 0;
 int main(void)
 {
-    //Init_IWDG();
+    Init_IWDG();
     Init_Gpio();
     Init_Delay();
-//    storage_init();
+    R_WDT_Restart();
+    storage_init();
     R_WDT_Restart();
     Init_Adc();
     Init_Timer6();
@@ -69,10 +59,26 @@ int main(void)
     Init_Uart1(9600);
     R_WDT_Restart();
     variable_setup();
-    R_UART0_Receive(w_buff,7);
-    delay_ms(100);
+//    delay_ms(100);
+//    P_PWM_OUT_1;
+//    M24C16_Read(0,r_buff,1);
+//    P_PWM_OUT_0;
+//    R_UART0_Receive(w_buff,7);
+//    delay_ms(100);
 //    P_EM_RESET_N_1;
-    R_TAU0_Channel4_Start();
+//    R_TAU0_Channel4_Start();
+//    P_RELAY_3_0;
+//	P_RELAY_2_1;
+//    P_RELAY_1_1;
+//    P_PWM_OUT_1;
+//    while(1)
+//    {
+//        delay_us(5);
+//        P_PWM_OUT_1;
+//        delay_us(2);
+//        P_PWM_OUT_0;
+//    }
+//    MCO_ClockOutPut_PA8();
 //    R_ADC_Start();
 //    RCC->CFGR &= ~0x0f000000;
 //    RCC->CFGR |= RCC_CFGR_MCO_HSE;
@@ -104,7 +110,7 @@ void HardFault_Handler(void)
 void main_loop(void)
 {
  /********   WDT operate     *************************************/
-//	R_WDT_Restart();
+	R_WDT_Restart();
 
 //Issues commands such as initialization processing, write processing, and read processing at any time.
 
@@ -144,7 +150,7 @@ void main_loop(void)
 	pulse_interval_check();	
 
 	check_kamen_total();
-	ecu_test_main();	
+//	ecu_test_main();	
 
 	process_key_3sw();
 	
@@ -190,7 +196,7 @@ void main_loop(void)
 	
 	comm_uart();
 	
-//test	storage_memory_handler();
+	storage_memory_handler();
 	
 /********   error check *****************************************/
 	error_ope_main();
@@ -309,7 +315,7 @@ void output_main(void){
 				P_RELAY_3_0;
 			}
 /*======  Fg_ccw      ========*/
-		if( Fg_ccw == 1)  
+		if( Fg_ccw == 1)  //CLOSE
 			{
 				P_RELAY_3_0;
 				P_RELAY_2_1;

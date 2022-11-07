@@ -32,16 +32,11 @@ IO IN: PB13/PB14/PB15
 #define P_RELAY_3_0 GPIOx_OUT(GPIOB,GPIO_Pin_5,0)
 #define P_RELAY_3_1 GPIOx_OUT(GPIOB,GPIO_Pin_5,1)
 
-#define RESET_N_PA8 1
-#if RESET_N_PA8
-#define	P_EM_RESET_N_0  GPIOx_OUT(GPIOA,GPIO_Pin_8,0)
-#define	P_EM_RESET_N_1  GPIOx_OUT(GPIOA,GPIO_Pin_8,1)
-#else
 #define	P_EM_RESET_N_0  GPIOx_OUT(GPIOB,GPIO_Pin_12,0)
 #define	P_EM_RESET_N_1  GPIOx_OUT(GPIOB,GPIO_Pin_12,1)
-#endif
 
 #define P_PWM_OUT_0     GPIOx_OUT(GPIOA,GPIO_Pin_6,0)
+#define P_PWM_OUT_1     GPIOx_OUT(GPIOA,GPIO_Pin_6,1)
 
 #define P_VER_POWER_0   GPIOx_OUT(GPIOA,GPIO_Pin_0,0)
 #define P_VER_POWER_1   GPIOx_OUT(GPIOA,GPIO_Pin_0,1)
@@ -56,5 +51,6 @@ void Init_Gpio(void);
 u1 P_OPEN_SW_Input(void);
 u1 P_STOP_SW_Input(void);
 u1 P_CLOSE_SW_Input(void);
+void MCO_ClockOutPut_PA8(void);
 
 #endif

@@ -3,7 +3,7 @@
 .\objects\m24c16.o: .\User\inc\IIC.h
 .\objects\m24c16.o: .\Libraries\CMSIS\Include\stm32f0xx.h
 .\objects\m24c16.o: .\Libraries\CMSIS\Include\core_cm0.h
-.\objects\m24c16.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdint.h
+.\objects\m24c16.o: D:\Keil_v5.23\ARM\ARMCC\Bin\..\include\stdint.h
 .\objects\m24c16.o: .\Libraries\CMSIS\Include\core_cmInstr.h
 .\objects\m24c16.o: .\Libraries\CMSIS\Include\core_cmFunc.h
 .\objects\m24c16.o: .\Libraries\CMSIS\Include\system_stm32f0xx.h

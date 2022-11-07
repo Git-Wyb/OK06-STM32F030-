@@ -25,7 +25,7 @@ void Init_Uart1(u4 BaudRate)
     GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AF;
     GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
     GPIO_InitStructure.GPIO_OType = GPIO_OType_PP;
-    GPIO_InitStructure.GPIO_PuPd = GPIO_PuPd_UP;
+    GPIO_InitStructure.GPIO_PuPd = GPIO_PuPd_NOPULL;//GPIO_PuPd_UP;
     GPIO_Init(GPIOA, &GPIO_InitStructure);
 
     USART1_InitStruct.USART_BaudRate = BaudRate;

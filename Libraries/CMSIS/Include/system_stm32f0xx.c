@@ -140,7 +140,7 @@ __I uint8_t AHBPrescTable[16] = {0, 0, 0, 0, 0, 0, 0, 0, 1, 2, 3, 4, 6, 7, 8, 9}
   */
 
 static void SetSysClock(void);
-
+static void SetSysClock_HSI(void);
 /**
   * @}
   */
@@ -191,7 +191,8 @@ void SystemInit (void)
   RCC->CIR = 0x00000000;
 
   /* Configure the System clock frequency, AHB/APBx prescalers and Flash settings */
-  SetSysClock();
+//  SetSysClock();
+  SetSysClock_HSI();
 }
 
 /**
@@ -336,6 +337,67 @@ static void SetSysClock(void)
 
     /* Wait till HSE is used as system clock source */
     while ((RCC->CFGR & (uint32_t)RCC_CFGR_SWS) != (uint32_t)RCC_CFGR_SWS_HSE)
+    {
+    }
+  }
+  else
+  { /* If HSE fails to start-up, the application will have wrong clock 
+         configuration. User can add here some code to deal with this error */
+  }  
+}
+
+static void SetSysClock_HSI(void)
+{
+  __IO uint32_t StartUpCounter = 0, HSEStatus = 0;
+  
+  /* SYSCLK, HCLK, PCLK configuration ----------------------------------------*/
+  /* Enable HSI */    
+  RCC->CR |= ((uint32_t)RCC_CR_HSION);
+ 
+  /* Wait till HSE is ready and if Time out is reached exit */
+  do
+  {
+    HSEStatus = RCC->CR & RCC_CR_HSIRDY;
+    StartUpCounter++;  
+  } while((HSEStatus == 0) && (StartUpCounter != HSE_STARTUP_TIMEOUT));
+
+  if ((RCC->CR & RCC_CR_HSIRDY) != RESET)
+  {
+    HSEStatus = (uint32_t)0x01;
+  }
+  else
+  {
+    HSEStatus = (uint32_t)0x00;
+  }  
+
+  if (HSEStatus == (uint32_t)0x01)
+  {
+    /* Enable Prefetch Buffer and set Flash Latency */
+    FLASH->ACR = FLASH_ACR_PRFTBE | FLASH_ACR_LATENCY;
+ 
+    /* HCLK = SYSCLK */
+    RCC->CFGR |= (uint32_t)RCC_CFGR_HPRE_DIV1;
+      
+    /* PCLK = HCLK */
+    RCC->CFGR |= (uint32_t)RCC_CFGR_PPRE_DIV1;
+    
+    /* PLL configuration = HSI/2 * 4 = 8/2 * 4 = 16 MHz */
+    RCC->CFGR |= (uint32_t)(RCC_CFGR_PLLSRC_HSI_Div2 | RCC_CFGR_PLLMULL4);
+          
+    /* Enable PLL */
+    RCC->CR |= RCC_CR_PLLON;
+
+    /* Wait till HSE is ready */
+    while((RCC->CR & RCC_CR_HSIRDY) == 0)
+    {
+    }
+
+    /* Select PLL as system clock source */
+    RCC->CFGR &= (uint32_t)((uint32_t)~(RCC_CFGR_SW));
+    RCC->CFGR |= (uint32_t)RCC_CFGR_SW_PLL;  //HSE PLL
+
+    /* Wait till HSI is used as system clock source */
+    while ((RCC->CFGR & (uint32_t)RCC_CFGR_SWS) != (uint32_t)RCC_CFGR_SWS_PLL)
     {
     }
   }

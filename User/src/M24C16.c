@@ -81,13 +81,13 @@ u4 M24C16_ReadLenByte(u2 ReadAddr,u1 Len)
 //ReadAddr :开始读出的地址
 //pBuffer  :数据数组首地址
 //NumToRead:要读出数据的个数
-void M24C16_Read(u2 ReadAddr,u1 *pBuffer,u2 NumToRead)
+void M24C16_Read(u2 ReadAddr,u1 *pBuffer,u2 NumToRead) //read 1byte 0.8ms,80byte 64ms;
 {
 	while(NumToRead)
 	{
 		*pBuffer++ = M24C16_ReadOneByte(ReadAddr++);	
 		NumToRead--;
-        //R_WDT_Restart();
+        R_WDT_Restart();
 	}
 }
 
@@ -96,7 +96,7 @@ void M24C16_Read(u2 ReadAddr,u1 *pBuffer,u2 NumToRead)
 //WriteAddr :开始写入的地址
 //pBuffer   :数据数组首地址
 //NumToWrite:要写入数据的个数
-void M24C16_Write(u2 WriteAddr,u1 *pBuffer,u2 NumToWrite)
+void M24C16_Write(u2 WriteAddr,u1 *pBuffer,u2 NumToWrite) //write 1byte 10.4ms,80byte 852ms;
 {
 	while(NumToWrite--)
 	{

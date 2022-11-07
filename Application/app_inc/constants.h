@@ -72,7 +72,7 @@
 
 #define	D_PWM_MAX_NORMAL		0x2A84	//99.6%
 #define	D_PWM_MAX_SOFT_LOCK		0x2A84	//99.6%
-#define D_PWM_DUTY_100			108	//0x555F (100%)
+#define D_PWM_DUTY_100			36	//0x555F (100%)
 #define	D_PWM_MIN			0	
 #define MAX_CHANGE			130
 #define MIN_CHANGE			((s2)(-130))	

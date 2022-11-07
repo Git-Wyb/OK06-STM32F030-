@@ -2,7 +2,7 @@
 .\objects\a_control_sol.o: .\User\inc\Gpio.h
 .\objects\a_control_sol.o: .\Libraries\CMSIS\Include\stm32f0xx.h
 .\objects\a_control_sol.o: .\Libraries\CMSIS\Include\core_cm0.h
-.\objects\a_control_sol.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdint.h
+.\objects\a_control_sol.o: D:\Keil_v5.23\ARM\ARMCC\Bin\..\include\stdint.h
 .\objects\a_control_sol.o: .\Libraries\CMSIS\Include\core_cmInstr.h
 .\objects\a_control_sol.o: .\Libraries\CMSIS\Include\core_cmFunc.h
 .\objects\a_control_sol.o: .\Libraries\CMSIS\Include\system_stm32f0xx.h

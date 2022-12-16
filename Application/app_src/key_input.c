@@ -146,9 +146,9 @@ static void sw_all_off_ope(void){
 
 void sw_input_check(void)
 {
-	u1g_sw[0x00] = P_OPEN_SW_Input();//(u1)(~P_OPEN_SW & 0x01);			
-	u1g_sw[0x01] = P_CLOSE_SW_Input();//(u1)(~P_CLOSE_SW & 0x01);			
-	u1g_sw[0x02] = P_STOP_SW_Input();//(u1)(~P_STOP_SW & 0x01);			
+	u1g_sw[0x00] = (u1)(~P_OPEN_SW & 0x01);			
+	u1g_sw[0x01] = (u1)(~P_CLOSE_SW & 0x01);			
+	u1g_sw[0x02] = (u1)(~P_STOP_SW & 0x01);			
 #if 0
 	u1g_sw[0x00] = P_OPEN_SW & P_OPEN_SW_WIRED;	
 	u1g_sw[0x01] = P_CLOSE_SW & P_CLOSE_SW_WIRED;

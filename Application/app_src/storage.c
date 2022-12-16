@@ -348,6 +348,9 @@ void storage_memory_handler(void)
                 flash_write_cmd = 0;
             }
             break;
+        default:
+            flash_write_cmd = 0;
+            break;
     }
 }
 

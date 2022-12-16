@@ -158,7 +158,7 @@
         <Ww>
           <count>1</count>
           <WinNumber>1</WinNumber>
-          <ItemText>u1g_current_mode,0x0A</ItemText>
+          <ItemText>u2g_d_pwm,0x0A</ItemText>
         </Ww>
         <Ww>
           <count>2</count>
@@ -233,12 +233,7 @@
         <Ww>
           <count>16</count>
           <WinNumber>1</WinNumber>
-          <ItemText>readata,0x0A</ItemText>
-        </Ww>
-        <Ww>
-          <count>17</count>
-          <WinNumber>1</WinNumber>
-          <ItemText>r_buff</ItemText>
+          <ItemText>u1a_fg_current_pulse_over_flow</ItemText>
         </Ww>
       </WatchWindow1>
       <MemoryWindow1>

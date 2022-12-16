@@ -72,15 +72,15 @@
 
 #define	D_PWM_MAX_NORMAL		0x2A84	//99.6%
 #define	D_PWM_MAX_SOFT_LOCK		0x2A84	//99.6%
-#define D_PWM_DUTY_100			36	//0x555F (100%)
+#define D_PWM_DUTY_100			108//108	//0x555F (100%)
 #define	D_PWM_MIN			0	
 #define MAX_CHANGE			130
 #define MIN_CHANGE			((s2)(-130))	
 #define CLOSE_MAX_CHANGE		28
 #define CLOSE_MIN_CHANGE		((s2)(-28))
 
-#define	KP				((s4)96)//96//96		
-#define	KI				((s4)25)//25//25//24		
+#define	KP				((s4)39)//96//96		
+#define	KI				((s4)1)//25//24		
 
 #define UNIT1_UNIT2_DATA_PLS_25		25
 #define UNIT1_UNIT2_DATA_MINUS_100	((s4)(-100))

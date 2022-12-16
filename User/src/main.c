@@ -53,12 +53,17 @@ int main(void)
     R_WDT_Restart();
     Init_Adc();
     Init_Timer6();
-    Init_Timer16();
-    Init_Timer17();
+//    Init_Timer16();
+//    Init_Timer17();
     Init_Timer15();
     Init_Uart1(9600);
     R_WDT_Restart();
     variable_setup();
+//    M24C16_Write(0,r_buff,80);
+//    M24C16_Write(80,r_buff,80);
+//    M24C16_Write(160,r_buff,80);
+//    M24C16_Write(240,r_buff,80);
+//    M24C16_Write(320,r_buff,80);
 //    delay_ms(100);
 //    P_PWM_OUT_1;
 //    M24C16_Read(0,r_buff,1);
@@ -150,7 +155,7 @@ void main_loop(void)
 	pulse_interval_check();	
 
 	check_kamen_total();
-//	ecu_test_main();	
+	ecu_test_main();	
 
 	process_key_3sw();
 	
@@ -243,8 +248,7 @@ void output_main(void){
 		}
 	else
 		{
-			R_TAU0_Channel4_Stop();
-			P_PWM_OUT_0;							
+			R_TAU0_Channel4_Stop();						
 
 			u1g_Fg_pwm_start_pass_code = 0;
 			Fg_pwm_out = 0;						

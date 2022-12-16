@@ -33,7 +33,7 @@ void Init_Timer6(void)
     NVIC_Init(&NVIC_InitStructure);
     
     /* Time base configuration */
-    TIM_TimeBaseStructure.TIM_Period = 1000;   //ARR自动重载值
+    TIM_TimeBaseStructure.TIM_Period = 1000 - 1;   //ARR自动重载值
     TIM_TimeBaseStructure.TIM_Prescaler = 15;//f = fCK_PSC / (PSC[15:0] + 1) = 16MHz / 16 = 1MHz.
     TIM_TimeBaseInit(TIM6, &TIM_TimeBaseStructure);
 
@@ -92,7 +92,7 @@ void Init_Timer16(void)
     NVIC_Init(&NVIC_InitStructure);
     
     /* Time base configuration */
-    TIM_TimeBaseStructure.TIM_Period = D_PWM_MAX_T; //T = 2.732ms, 10928//0x2AB0
+    TIM_TimeBaseStructure.TIM_Period = D_PWM_MAX_T - 1; //T = 2.732ms, 10928//0x2AB0
     TIM_TimeBaseStructure.TIM_Prescaler = 3;   //16MHz/(3+1) = 4MHz.
     TIM_TimeBaseStructure.TIM_ClockDivision = 0;
     TIM_TimeBaseStructure.TIM_CounterMode = TIM_CounterMode_Up;
@@ -134,12 +134,14 @@ void R_TAU0_Channel4_Start(void)
     if(flag_tim16_en == 0)
     {
         flag_tim16_en = 1;
+        Init_Timer16();
         TIM_Cmd(TIM16, ENABLE);
         TIM_CtrlPWMOutputs(TIM16, ENABLE);
     }
 }
 void R_TAU0_Channel4_Stop(void)
 {
+    GPIO_InitTypeDef    GPIO_InitStructure;
     if(flag_tim16_en == 1)
     {
         flag_tim16_en = 0;
@@ -147,6 +149,13 @@ void R_TAU0_Channel4_Stop(void)
         TIM16->CCR1 = 0;
         TIM_CtrlPWMOutputs(TIM16, DISABLE);
         TIM_Cmd(TIM16, DISABLE);
+        GPIO_InitStructure.GPIO_Pin = GPIO_Pin_6;
+        GPIO_InitStructure.GPIO_Mode = GPIO_Mode_OUT;
+        GPIO_InitStructure.GPIO_OType = GPIO_OType_PP;
+        GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
+        GPIO_InitStructure.GPIO_PuPd = GPIO_PuPd_NOPULL;
+        GPIO_Init(GPIOA, &GPIO_InitStructure);
+        P_PWM_OUT_0;
     }
 }
 
@@ -180,7 +189,7 @@ void Init_Timer17(void)
     NVIC_Init(&NVIC_InitStructure);
     
     /* Time base configuration */
-    TIM_TimeBaseStructure.TIM_Period = D_BREAK_MAX_LEVEL;  //36000
+    TIM_TimeBaseStructure.TIM_Period = D_BREAK_MAX_LEVEL - 1;  //36000
     TIM_TimeBaseStructure.TIM_Prescaler = 3;   //16MHz/(3+1) = 4MHz.
     TIM_TimeBaseStructure.TIM_ClockDivision = 0;
     TIM_TimeBaseStructure.TIM_CounterMode = TIM_CounterMode_Up;
@@ -219,12 +228,17 @@ void TIM17_IRQHandler(void)
 
 void R_TAU0_Channel6_Start(void)
 {
-    flag_tim17_en = 1;
-    TIM_Cmd(TIM17, ENABLE);
-    TIM_CtrlPWMOutputs(TIM17, ENABLE);
+    if(flag_tim17_en == 0)
+    {
+        flag_tim17_en = 1;
+        Init_Timer17();
+        TIM_Cmd(TIM17, ENABLE);
+        TIM_CtrlPWMOutputs(TIM17, ENABLE);
+    }
 }
 void R_TAU0_Channel6_Stop(void)
 {
+    GPIO_InitTypeDef GPIO_InitStructure;
     if(flag_tim17_en == 1)
     {
         flag_tim17_en = 0;
@@ -232,6 +246,13 @@ void R_TAU0_Channel6_Stop(void)
         TIM17->CCR1 = 0;
         TIM_CtrlPWMOutputs(TIM17, DISABLE);
         TIM_Cmd(TIM17, DISABLE);
+        GPIO_InitStructure.GPIO_Pin = GPIO_Pin_7;
+        GPIO_InitStructure.GPIO_Mode = GPIO_Mode_OUT;
+        GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
+        GPIO_InitStructure.GPIO_OType = GPIO_OType_PP;
+        GPIO_InitStructure.GPIO_PuPd = GPIO_PuPd_NOPULL;//GPIO_PuPd_UP ;
+        GPIO_Init(GPIOA, &GPIO_InitStructure);
+        P_T_BREAK_0;
     }
 }
 
@@ -259,7 +280,7 @@ void Init_Timer15(void)
     RCC_APB2PeriphClockCmd(RCC_APB2Periph_TIM15, ENABLE);
     /* Time base configuration */
     TIM_TimeBaseStructure.TIM_Period = 65535;//1440;  //2.777KHz
-    TIM_TimeBaseStructure.TIM_Prescaler = 15;//16MHz/(15+1) = 1MHz.
+    TIM_TimeBaseStructure.TIM_Prescaler = 31;//16MHz/(31+1) = 0.5MHz.
     TIM_TimeBaseStructure.TIM_ClockDivision = TIM_CKD_DIV1; //0
     TIM_TimeBaseStructure.TIM_CounterMode = TIM_CounterMode_Up;
     TIM_TimeBaseInit(TIM15, &TIM_TimeBaseStructure);
@@ -288,7 +309,6 @@ void Init_Timer15(void)
 //两条边(当测量低电平宽度时),启动触发:下降边缘，捕获触发:上升边缘
 //计时器中断在计数开始时不产生,(计时器输出也没有改变)
 u1 overflow_cnt = 0;
-u1 in_cnt = 0;
 void TIM15_IRQHandler(void)
 {    
     if((TIM15->SR & TIM_FLAG_CC2) == TIM_SR_CC2IF)   //捕获标志
@@ -300,24 +320,18 @@ void TIM15_IRQHandler(void)
             overflow_cnt = 0;
             TIM15->CNT = 0;
             TIM15->CCR2 = 0;
-            u4g_plus_length_buffer = g_tau0_ch2_width / 2;
-            in_cnt++;
-            if(in_cnt>=2)
-            {
-                in_cnt = 2;
-                int_input_encoder();
-            }
+            u4g_plus_length_buffer = g_tau0_ch2_width;
+            int_input_encoder();
             //int_input_encoder_test();
             TIM15->SR &= ~TIM_FLAG_Update;   //Clear Flag
         }
 
-        if(flag_CaptureStart == 0)
+        if(flag_CaptureStart == 0 && P_ENCODER_A == 1)
         {
             flag_CaptureStart = 1;
             TIM15->CNT = 0;
             TIM15->CCR2 = 0;
             overflow_cnt = 0;
-            in_cnt = 0;
             TIM15->SR &= ~TIM_FLAG_CC2; 
             TIM15->SR &= ~TIM_FLAG_Update;   //Clear Flag
             TIM_ITConfig(TIM15,TIM_IT_Update,ENABLE);   //更新中断
@@ -330,7 +344,6 @@ void TIM15_IRQHandler(void)
         if(overflow_cnt >= 5)
         {
             overflow_cnt = 0;
-            in_cnt = 0;
             u1a_fg_current_pulse_over_flow = 0;
             flag_CaptureStart = 0;
             TIM15->SR &= ~TIM_FLAG_CC2;    //TIM_ClearITPendingBit

@@ -39,10 +39,10 @@ static void soft_lock_signal(void);
 void variable_setup(void);
 static void main_loop(void);
 
-u1 w_buff[90] = {11,1,2,3,4,5,6,7,8,9,10};
-u1 r_buff[90] = {0};
-u1 datat = 55;
-u1 readata = 0;
+//u1 w_buff[90] = {11,1,2,3,4,5,6,7,8,9,10};
+//u1 r_buff[90] = {0};
+//u1 datat = 55;
+//u1 readata = 0;
 int main(void)
 {
     Init_IWDG();
@@ -122,10 +122,11 @@ void main_loop(void)
 	check_flash_task();
 
 	ret_set();
-	
+	 
 /********  motor setting   ********************************/
 
-	u2g_standard_plus_length = STAND_PLUS_LENGTH;
+    if(flag_test_rotate)	u2g_standard_plus_length = TEST_SPEED_657RPM;//weitest
+	else	u2g_standard_plus_length = STAND_PLUS_LENGTH;
 
 	a_vol_motor_huka_setting();
 	
@@ -199,10 +200,10 @@ void main_loop(void)
 	
 	set_ope_state_f();
 	
-	comm_uart();
+	if(flag_test_enable == 0) comm_uart();
 	
 	storage_memory_handler();
-	
+
 /********   error check *****************************************/
 	error_ope_main();
 	
@@ -223,6 +224,8 @@ void main_loop(void)
 	u1g_previous_motor_speed = u1g_motor_speed;
 
 	a_vol_clear_reset_command();
+    
+    if(flag_test_enable == 1)   uart_production_test();//test
 }
 
 void output_main(void){

@@ -221,4 +221,21 @@ typedef struct {
 	bool rx_end;	
 } uart_ev;
 
+/* The following is the production test software program */
+/* 2021.02.02 */
+typedef enum{
+	UART_TEST_RESET_ON,
+	UART_TEST_CURR,
+	UART_TEST_VER,
+	UART_TEST_TEMP,
+	UART_TEST_OPEN,
+	UART_TEST_ROTATE,
+	UART_TEST_CLOSE,
+	UART_TEST_ENCODER_SPEED_SEND,	
+	UART_TEST_EXIT = 10,
+	UART_TEST_IDLE
+}uart_test_enum;
+
+#define TEST_MODE 0
+
 #endif

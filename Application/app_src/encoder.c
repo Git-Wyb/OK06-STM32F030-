@@ -394,6 +394,7 @@ void state_output_ope(void){
 static void ope_add_p_c(void){
 	if( s2g_cnt_plus <= (s2)0x7ffe )
 		{
+            s2_encoder_cnt++;
 			s2g_cnt_plus++;
 			if( s2g_unknown_cnt_plus <= (s2)0x7ffe ){
 				s2g_unknown_cnt_plus++;
@@ -427,6 +428,7 @@ static void ope_redu_p_c(void){
 //	if( s2g_cnt_plus >= (s2)0x8001 )
 	if( s2g_cnt_plus >= (s2)(-32177) )
 		{
+            s2_encoder_cnt--;
 			s2g_cnt_plus--;
 			if( s2g_unknown_cnt_plus >= (s2)-32177 ){
 				s2g_unknown_cnt_plus--;

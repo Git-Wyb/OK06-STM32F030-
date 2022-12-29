@@ -33,12 +33,12 @@ typedef struct {
 } strg_cmd;	
 
 
-typedef enum {
-	STRG_HNDL_NO_AVAIL,	
-	STRG_HNDL_UNFORMAT,
-	STRG_HNDL_IDLE,	
-	STRG_HNDL_BUSY	
-} strg_hndl_st;		
+//typedef enum {
+//	STRG_HNDL_NO_AVAIL,	
+//	STRG_HNDL_UNFORMAT,
+//	STRG_HNDL_IDLE,	
+//	STRG_HNDL_BUSY	
+//} strg_hndl_st;		
 
 
 strg_blk storage[N_STORAGE_ID] = {0};	

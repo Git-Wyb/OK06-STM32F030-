@@ -40,6 +40,8 @@ void Init_Adc(void)
     NVIC_EnableIRQ(ADC1_COMP_IRQn);
     NVIC_SetPriority(ADC1_COMP_IRQn,5);
     
+//    ADC_VrefintCmd(ENABLE);
+    
     /* ADC Calibration */
     ADC_GetCalibrationFactor(ADC1);
     
@@ -110,36 +112,36 @@ void select_ad_class(u1 u1l_ad_class)
     }
 	else{}	
 }
-u1 curr_buff[10] = {0};
-u1 ad_num_test = 9;
-void adc_test(void)
-{
-    u1 i = 0;
-    if(u1g_limit_ad >= 7)
-    {
-        u1g_limit_ad = 0;
-        //R_ADC_Stop();
-        select_ad_class(ad_num_test);
-        if(ad_num_test == VER)  
-        {
-            P_VER_POWER_1;
-        }
-        else    
-        {
-            P_VER_POWER_0;
-        }
-        if(ad_num_test == 10)
-        {
-            for(i=0; i<7; i++)
-            {
-                curr_buff[i] = u2g_raw_data[i];
-            }
-        }
-        R_ADC_Start();
-        ad_num_test++;
-        if(ad_num_test == 12) ad_num_test = 9;
-    }
-}
+//u1 curr_buff[10] = {0};
+//u1 ad_num_test = 9;
+//void adc_test(void)
+//{
+//    u1 i = 0;
+//    if(u1g_limit_ad >= 7)
+//    {
+//        u1g_limit_ad = 0;
+//        //R_ADC_Stop();
+//        select_ad_class(ad_num_test);
+//        if(ad_num_test == VER)  
+//        {
+//            P_VER_POWER_1;
+//        }
+//        else    
+//        {
+//            P_VER_POWER_0;
+//        }
+//        if(ad_num_test == 10)
+//        {
+//            for(i=0; i<7; i++)
+//            {
+//                curr_buff[i] = u2g_raw_data[i];
+//            }
+//        }
+//        R_ADC_Start();
+//        ad_num_test++;
+//        if(ad_num_test == 12) ad_num_test = 9;
+//    }
+//}
 
 void ADC_ChannelSet(uint32_t ADC_Channel,uint32_t ADC_SampleTime)
 {

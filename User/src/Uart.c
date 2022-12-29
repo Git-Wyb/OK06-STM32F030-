@@ -5,8 +5,8 @@ volatile uint16_t  g_uart0_tx_count = 0;           /* uart0 transmit data number
 volatile uint8_t * gp_uart0_rx_address = 0;        /* uart0 receive buffer address */
 volatile uint16_t  g_uart0_rx_count = 0;;           /* uart0 receive data number */
 volatile uint16_t  g_uart0_rx_length = 0;
-u1 Rx_Buff[10] = {0};
-u1 Tx_Buff[10] = {1,2,3,4,5};
+//u1 Rx_Buff[10] = {0};
+//u1 Tx_Buff[10] = {1,2,3,4,5};
 
 //PA9 -> USART1_TX; PA10 -> USART1_RX
 void Init_Uart1(u4 BaudRate)

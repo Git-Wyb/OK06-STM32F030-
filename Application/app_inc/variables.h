@@ -835,5 +835,25 @@ extern u1 Fg_uart_fact_finish_trq_test;
 extern u1 Fg_uart_fact_finish_elec_test;
 extern u1 Fg_uart_fact_error;
 extern u1 Fg_uart_fact_check_stop;
+
+extern u2 time_run_cnt;
+extern u2 timeout_test_enter;
+extern u1 uart_send_buf[16];
+extern u1 uart_recv_buf[8];
+extern u2 uart_test_curr_value;
+extern u2 uart_test_temp_value;
+extern u2 uart_test_ver_value;
+extern s2 s2_encoder_cnt;
+
+#define TEST_OPEN_TIME 12000
+#define TEST_ROTATE_TIME 1000//6000
+#define TEST_CLOSE_TIME	1000
+
+extern BaseFlagStruct Un_Flag1;
+#define flag_test_enable	Un_Flag1.Bit.b0
+#define flag_test_encoder 	Un_Flag1.Bit.b1 
+#define flag_test_rotate 	Un_Flag1.Bit.b2
+#define flag_test_once_stop 	Un_Flag1.Bit.b3
+
 #endif
 

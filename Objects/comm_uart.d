@@ -41,3 +41,4 @@
 .\objects\comm_uart.o: .\Application\app_inc\functions.h
 .\objects\comm_uart.o: .\Application\app_inc\anjou_test.h
 .\objects\comm_uart.o: .\Application\app_inc\input_encoder.h
+.\objects\comm_uart.o: D:\Keil_v5.23\ARM\ARMCC\Bin\..\include\string.h

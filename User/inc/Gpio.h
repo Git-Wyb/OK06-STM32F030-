@@ -21,9 +21,12 @@ IO IN: PB13/PB14/PB15
 #define P_ENCODER_A PA3
 #define P_ENCODER_B PA4
 
-#define P_OPEN_SW   PB15
-#define P_STOP_SW   PB14
-#define P_CLOSE_SW  PB13
+#define OPEN_SW     PB15
+#define STOP_SW     PB14
+#define CLOSE_SW    PB13
+#define P_OPEN_SW   (u1)(~OPEN_SW & 0x01)
+#define P_STOP_SW   (u1)(~STOP_SW & 0x01)
+#define P_CLOSE_SW  (u1)(~CLOSE_SW & 0x01)
 
 #define P_RELAY_1_0 GPIOx_OUT(GPIOB,GPIO_Pin_4,0)
 #define P_RELAY_1_1 GPIOx_OUT(GPIOB,GPIO_Pin_4,1)

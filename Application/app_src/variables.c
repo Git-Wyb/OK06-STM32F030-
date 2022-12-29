@@ -395,3 +395,12 @@ u1 Fg_uart_fact_check_stop = 0;
 /********* 	in a_lock_mode.c	**********/
 u1 u1g_Fg_soft_lock_out_duty = 0;
 
+BaseFlagStruct Un_Flag1 = {0};
+u2 time_run_cnt = 0;
+u2 timeout_test_enter = 15500;
+u1 uart_send_buf[16] = {0};
+u1 uart_recv_buf[8] = {0};
+u2 uart_test_curr_value = 0;
+u2 uart_test_temp_value = 0;
+u2 uart_test_ver_value = 0;
+s2 s2_encoder_cnt = 0;

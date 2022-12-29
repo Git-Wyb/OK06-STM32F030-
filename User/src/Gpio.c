@@ -43,36 +43,36 @@ void Init_Gpio(void)
 }
 
 
-void MCO_ClockOutPut_PA8(void)
-{
-    GPIO_InitTypeDef    GPIO_InitStructure;
-    RCC_AHBPeriphClockCmd(RCC_AHBPeriph_GPIOA, ENABLE);
-    
-    GPIO_InitStructure.GPIO_Pin = GPIO_Pin_8;
-    GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AF;
-    GPIO_InitStructure.GPIO_OType = GPIO_OType_PP;
-    GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
-    GPIO_InitStructure.GPIO_PuPd = GPIO_PuPd_UP;//GPIO_PuPd_NOPULL;
-    GPIO_Init(GPIOA, &GPIO_InitStructure);
-    
-    GPIO_PinAFConfig(GPIOA, GPIO_PinSource8, GPIO_AF_0);
-    
-    RCC->CFGR &= ~0x0f000000;
-    RCC->CFGR |= RCC_CFGR_MCO_HSI;
-//    RCC->CFGR |= RCC_CFGR_MCO_HSE;
-}
+//void MCO_ClockOutPut_PA8(void)
+//{
+//    GPIO_InitTypeDef    GPIO_InitStructure;
+//    RCC_AHBPeriphClockCmd(RCC_AHBPeriph_GPIOA, ENABLE);
+//    
+//    GPIO_InitStructure.GPIO_Pin = GPIO_Pin_8;
+//    GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AF;
+//    GPIO_InitStructure.GPIO_OType = GPIO_OType_PP;
+//    GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
+//    GPIO_InitStructure.GPIO_PuPd = GPIO_PuPd_UP;//GPIO_PuPd_NOPULL;
+//    GPIO_Init(GPIOA, &GPIO_InitStructure);
+//    
+//    GPIO_PinAFConfig(GPIOA, GPIO_PinSource8, GPIO_AF_0);
+//    
+//    RCC->CFGR &= ~0x0f000000;
+//    RCC->CFGR |= RCC_CFGR_MCO_HSI;
+////    RCC->CFGR |= RCC_CFGR_MCO_HSE;
+//}
 
-u1 P_OPEN_SW_Input(void)
-{
-    return (u1)(~GPIO_ReadInputDataBit(GPIOB,GPIO_Pin_15) & 0x01);
-}
+//u1 P_OPEN_SW_Input(void)
+//{
+//    return (u1)(~GPIO_ReadInputDataBit(GPIOB,GPIO_Pin_15) & 0x01);
+//}
 
-u1 P_STOP_SW_Input(void)
-{
-    return (u1)(~GPIO_ReadInputDataBit(GPIOB,GPIO_Pin_14) & 0x01);
-}
+//u1 P_STOP_SW_Input(void)
+//{
+//    return (u1)(~GPIO_ReadInputDataBit(GPIOB,GPIO_Pin_14) & 0x01);
+//}
 
-u1 P_CLOSE_SW_Input(void)
-{
-    return (u1)(~GPIO_ReadInputDataBit(GPIOB,GPIO_Pin_13) & 0x01);
-}
+//u1 P_CLOSE_SW_Input(void)
+//{
+//    return (u1)(~GPIO_ReadInputDataBit(GPIOB,GPIO_Pin_13) & 0x01);
+//}

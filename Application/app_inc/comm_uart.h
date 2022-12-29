@@ -15,6 +15,11 @@ void i_serial_uart_rx_error(u1);
 void i_serial_uart_rx_over_run(void);
 
 void uart_fact_trq_test(void);	
-void uart_fact_elec_test(void);		
+void uart_fact_elec_test(void);	
+
+void uart_recv_del(void);
+void uart_production_test(void);
+void average_speed(void);
+void uart_rx_test_check(void);
 
 #endif

@@ -7,12 +7,11 @@
 #include "flash_data_read.h"
 #include "tst_break.h"
 
-//u2 u2g_d_pwm = 0;
 //u2 u2g_t_break_duty = 0;
-u1 time_cnt = 0;
-u4 u4l_High_Length = 0;
-u4 u4l_Low_Length = 0;
-u4 u4g_Plus_Length = 0;
+//u1 time_cnt = 0;
+//u4 u4l_High_Length = 0;
+//u4 u4l_Low_Length = 0;
+//u4 u4g_Plus_Length = 0;
 
 volatile u4 g_tau0_ch2_width = 0UL;
 
@@ -52,11 +51,11 @@ void TIM6_DAC_IRQHandler(void)
     {
         TIM6->SR &= ~TIM_FLAG_Update;   //Clear flag
         int_system_timer();
-        time_cnt++; 
-        if(time_cnt >= 200) 
-        {
-            time_cnt = 0;
-        }
+//        time_cnt++; 
+//        if(time_cnt >= 200) 
+//        {
+//            time_cnt = 0;
+//        }
     }
 }
 //TIM_PrescalerConfig
@@ -353,28 +352,28 @@ void TIM15_IRQHandler(void)
     }
     TIM15->SR &= ~TIM_FLAG_Update;   //Clear Flag
 }
-f4 Pwm_val = 0;
-f4 T = 0;
-u4 rpm_val = 0;
-void int_input_encoder_test(void)
-{
-    if(g_tau0_ch2_width <= 20 && overflow_cnt == 0){}
-    else
-    {
-        if(P_ENCODER_A == 1)    //上升沿捕获的，计数值为低电平时间。
-        {
-            u4l_Low_Length = g_tau0_ch2_width;
-            rpm_val = 7500000 / u4g_Plus_Length;
-        }
-        else
-        {
-            u4l_High_Length = g_tau0_ch2_width;
-        }
-        u4g_Plus_Length = u4l_High_Length + u4l_Low_Length;
-        T = ((f4)1/(f4)1000000 * (f4)u4g_Plus_Length * (f4)1000);
-        Pwm_val = ((f4)u4l_High_Length / (f4)u4g_Plus_Length);
-    }
-}
+//f4 Pwm_val = 0;
+//f4 T = 0;
+//u4 rpm_val = 0;
+//void int_input_encoder_test(void)
+//{
+//    if(g_tau0_ch2_width <= 20 && overflow_cnt == 0){}
+//    else
+//    {
+//        if(P_ENCODER_A == 1)    //上升沿捕获的，计数值为低电平时间。
+//        {
+//            u4l_Low_Length = g_tau0_ch2_width;
+//            rpm_val = 7500000 / u4g_Plus_Length;
+//        }
+//        else
+//        {
+//            u4l_High_Length = g_tau0_ch2_width;
+//        }
+//        u4g_Plus_Length = u4l_High_Length + u4l_Low_Length;
+//        T = ((f4)1/(f4)1000000 * (f4)u4g_Plus_Length * (f4)1000);
+//        Pwm_val = ((f4)u4l_High_Length / (f4)u4g_Plus_Length);
+//    }
+//}
 //TIM_IT_Trigger
 
 
@@ -387,6 +386,14 @@ void int_system_timer(void)
 	else{
 		P_RELAY_1_0;
 	}
+    
+    if(flag_test_enable == 1)
+	{
+		if(flag_test_encoder==1 && time_run_cnt<TEST_OPEN_TIME)	time_run_cnt++;
+		else if(flag_test_rotate==1 && time_run_cnt<TEST_ROTATE_TIME)	time_run_cnt++;
+		else if(flag_test_once_stop==1 && time_run_cnt<1000)	time_run_cnt++;
+	}
+	if(timeout_test_enter) timeout_test_enter--;
 
 	//sw_input_check();
 	u2g_c_interval_plus++;

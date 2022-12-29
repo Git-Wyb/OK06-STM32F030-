@@ -9,6 +9,7 @@
 #include "functions.h"
 #include "anjou_test.h"
 #include "input_encoder.h"
+#include <string.h>
 
 const u1 c_uart_mode[N_CURRENT_MODE] = {	
 	UART_VALUE_MODE_BEGEN,		UART_VALUE_MODE_BEGEN,		UART_VALUE_MODE_BEGEN,		UART_VALUE_MODE_BEGEN,		UART_VALUE_MODE_BEGEN,		/* 0бл4 */
@@ -497,28 +498,33 @@ STATIC uart_ph check_uart_retry(uart_ph ph_retry)
 
 void i_serial_uart_rx_end(void)
 {
-	if (!uart_err_rcv) {
-		if ((uart_phase == UART_PH_TX) || (uart_phase == UART_PH_TX_ANS_WAIT) 
-			|| (uart_phase == UART_PH_TX_BUZZER) || (uart_phase == UART_PH_TX_BUZZER_ANS_WAIT)) {
-			if ((u1l_uart_txans[UART_RX_START] == UART_VALUE_START) && (u1l_uart_txans[UART_TXANS_L_DATA] == UART_VALUE_ANS_TX_L_DATA)) {
-				ev_uart.ans_rcv = TRUE;
-			}
-		} else if ((uart_phase == UART_PH_FACT_REQ_MDL_END) || (uart_phase == UART_PH_FACT_ANS_WAIT) || (uart_phase == UART_PH_FACT_ANS) || (uart_phase == UART_PH_FACT_WAIT_MODEL)) {
-			R_UART0_Receive(u1l_uart_txans, N_UART_BYTE_TX_ANS);
-			if ((u1l_uart_txans[UART_RX_START] == UART_VALUE_START) && (u1l_uart_txans[UART_TXANS_L_DATA] == UART_VALUE_ANS_TX_L_DATA)) {
-				ev_uart.ans_rcv = TRUE;
-			}
-		} else  if (uart_phase == UART_PH_IDLE) {
-			if (check_uart_rx() == TRUE) {
-				ev_uart.rx = TRUE;
-			}
-			R_UART0_Receive(u1l_uart_rxbuf, N_UART_BYTE_RX);
-		} else {
-		}
-	} else {
-		uart_err_rcv = FALSE;
-	}
-	uart_clear_rx_buf();
+    if(flag_test_enable == 1) uart_recv_del();//test
+    else
+    {
+        if (!uart_err_rcv) {
+            if ((uart_phase == UART_PH_TX) || (uart_phase == UART_PH_TX_ANS_WAIT) 
+                || (uart_phase == UART_PH_TX_BUZZER) || (uart_phase == UART_PH_TX_BUZZER_ANS_WAIT)) {
+                if ((u1l_uart_txans[UART_RX_START] == UART_VALUE_START) && (u1l_uart_txans[UART_TXANS_L_DATA] == UART_VALUE_ANS_TX_L_DATA)) {
+                    ev_uart.ans_rcv = TRUE;
+                }
+            } else if ((uart_phase == UART_PH_FACT_REQ_MDL_END) || (uart_phase == UART_PH_FACT_ANS_WAIT) || (uart_phase == UART_PH_FACT_ANS) || (uart_phase == UART_PH_FACT_WAIT_MODEL)) {
+                R_UART0_Receive(u1l_uart_txans, N_UART_BYTE_TX_ANS);
+                if ((u1l_uart_txans[UART_RX_START] == UART_VALUE_START) && (u1l_uart_txans[UART_TXANS_L_DATA] == UART_VALUE_ANS_TX_L_DATA)) {
+                    ev_uart.ans_rcv = TRUE;
+                }
+            } else  if (uart_phase == UART_PH_IDLE) {
+                if (check_uart_rx() == TRUE) {
+                    ev_uart.rx = TRUE;
+                }
+                if(timeout_test_enter > 0 && u1g_current_mode < 100) uart_rx_test_check();//test
+                R_UART0_Receive(u1l_uart_rxbuf, N_UART_BYTE_RX);
+            } else {
+            }
+        } else {
+            uart_err_rcv = FALSE;
+        }
+        uart_clear_rx_buf();
+    }
 }
 
 STATIC bool check_uart_rx(void)
@@ -800,3 +806,525 @@ STATIC void uart_fact_set_tx(u1 value_id, u1 value_signal)
 	uart_tx_start();
 }
 
+/*Function description: Production test program*/
+static u1 time_count = 0;
+static u2 encoder_speed = 0;
+static u1 average_step = 0;
+static u2 get_speed_buff[7] = {0};
+u1 uart_test_step = UART_TEST_RESET_ON;
+
+#if TEST_MODE==0
+void uart_production_test(void)
+{
+	switch(uart_test_step)
+	{
+		case UART_TEST_RESET_ON:
+			uart_send_buf[0] = 0x22;
+			uart_send_buf[1] = 0x08;
+			uart_send_buf[2] = 0x09;
+			uart_send_buf[3] = 0x09;
+			uart_send_buf[4] = 0x00;
+			uart_send_buf[5] = 0x00;
+			uart_send_buf[6] = 0x00;
+			uart_send_buf[7] = 0xBB;
+			time_count++;
+			if(time_count>200)
+			{
+				R_UART0_Receive(uart_recv_buf,7);
+				time_count = 0;
+				R_UART0_Send(uart_send_buf,8);
+				uart_test_step = UART_TEST_IDLE;
+				flag_test_encoder = 0;
+				flag_test_rotate = 0;
+			}
+			break;
+		case UART_TEST_CURR:
+			time_count++;
+			if(time_count>50)
+			{
+				time_count = 0;
+				uart_send_buf[2] = UART_TEST_CURR;
+				uart_send_buf[3] = 0;
+				uart_send_buf[4] = uart_test_curr_value & 0xff;
+				uart_send_buf[5] = 0;
+				uart_send_buf[6] = 0; 
+				uart_send_buf[7] = 0xBB;
+				
+				R_UART0_Send(uart_send_buf,8);
+				if(flag_test_encoder == 1) uart_test_step = UART_TEST_ENCODER_SPEED_SEND;
+				else uart_test_step = UART_TEST_IDLE;
+			}
+			break;
+		case UART_TEST_TEMP:
+			uart_send_buf[2] = UART_TEST_TEMP;
+			uart_send_buf[3] = (uart_test_temp_value >> 8) & 0xff;
+			uart_send_buf[4] = (uart_test_temp_value & 0xff);
+			uart_send_buf[5] = 0;
+			uart_send_buf[6] = 0;
+			uart_send_buf[7] = 0xBB;
+			R_UART0_Send(uart_send_buf,8);
+			if(flag_test_encoder == 1) uart_test_step = UART_TEST_ENCODER_SPEED_SEND;
+			else uart_test_step = UART_TEST_IDLE;
+			break;
+		case UART_TEST_VER:
+			P_VER_POWER_1;
+			time_count++;
+			if(time_count>100)
+			{
+				time_count = 0;
+				uart_send_buf[2] = UART_TEST_VER;
+				uart_send_buf[3] = (uart_test_ver_value >> 8) & 0xff;
+				uart_send_buf[4] = (uart_test_ver_value & 0xff);
+				uart_send_buf[5] = 0;
+				uart_send_buf[6] = 0;
+				uart_send_buf[7] = 0xBB;
+				R_UART0_Send(uart_send_buf,8);
+				P_VER_POWER_0;
+				if(flag_test_encoder == 1) uart_test_step = UART_TEST_ENCODER_SPEED_SEND;
+				else uart_test_step = UART_TEST_IDLE;
+			}
+			break;
+		case UART_TEST_OPEN:
+			if(flag_test_rotate == 0)
+			{
+				flag_test_encoder = 1;
+				uart_send_buf[2] = UART_TEST_OPEN;
+				uart_send_buf[3] = 0;
+				uart_send_buf[4] = 0;
+				uart_send_buf[5] = 0;
+				uart_send_buf[6] = 0;
+				uart_send_buf[7] = 0xBB;
+				R_UART0_Send(uart_send_buf,8);
+				uart_test_step = UART_TEST_ENCODER_SPEED_SEND;
+			}
+			break;
+		case UART_TEST_CLOSE:
+		
+			break;
+		case UART_TEST_ENCODER_SPEED_SEND:
+			average_speed();
+			if(time_run_cnt == TEST_OPEN_TIME)
+			{
+				if(s2_encoder_cnt > 0) s2_encoder_cnt |= 0x8000;
+				else s2_encoder_cnt = -s2_encoder_cnt; 
+				uart_send_buf[2] = UART_TEST_OPEN;
+				//uart_send_buf[3] = 0;
+				//uart_send_buf[4] = uart_test_curr_value & 0xff;
+				//uart_send_buf[5] = (uart_test_ver_value >> 8) & 0xff;
+				//uart_send_buf[6] = (uart_test_ver_value & 0xff);
+				//uart_send_buf[7] = (uart_test_temp_value >> 8) & 0xff;
+				//uart_send_buf[8] = (uart_test_temp_value & 0xff);
+				uart_send_buf[3] = (s2_encoder_cnt >> 8) & 0xff;
+				uart_send_buf[4] = (s2_encoder_cnt & 0xff);
+				uart_send_buf[5] = (encoder_speed >> 8) & 0xff;
+				uart_send_buf[6] = (encoder_speed & 0xff);
+				uart_send_buf[7] = 0xBB;
+				R_UART0_Send(uart_send_buf,8);
+				time_run_cnt = 0;
+				flag_test_encoder = 0;
+				s2_encoder_cnt = 0;
+				uart_test_step = UART_TEST_IDLE;
+			}
+			break;
+		case UART_TEST_ROTATE:
+			if(flag_test_encoder == 0)
+			{
+				flag_test_rotate = 1;
+				uart_send_buf[2] = UART_TEST_ROTATE;
+				uart_send_buf[3] = 0x10;
+				uart_send_buf[4] = 0;
+				uart_send_buf[5] = 0;
+				uart_send_buf[6] = 0;
+				uart_send_buf[7] = 0xBB;
+				R_UART0_Send(uart_send_buf,8);
+				uart_test_step = UART_TEST_IDLE;
+			}
+			else uart_test_step = UART_TEST_ENCODER_SPEED_SEND;
+			break;
+		case UART_TEST_EXIT:
+			if(flag_test_encoder==0 && flag_test_rotate==0)
+			{
+				flag_test_enable = 0;
+				uart_send_buf[0] = 0x22;
+				uart_send_buf[1] = 0x08;
+				uart_send_buf[2] = 0x0A;
+				uart_send_buf[3] = 0x0A;
+				uart_send_buf[4] = 0x00;
+				uart_send_buf[5] = 0x00;
+				uart_send_buf[6] = 0x00;
+				uart_send_buf[7] = 0xBB;
+				R_UART0_Send(uart_send_buf,8);
+				
+				R_UART0_Receive(u1l_uart_rxbuf, N_UART_BYTE_RX);
+				time_count = 0;
+				time_run_cnt = 0;
+				s2_encoder_cnt = 0;
+				flag_test_once_stop = 0;
+				uart_test_step = UART_TEST_RESET_ON;
+			}
+			else if(flag_test_encoder == 1) uart_test_step = UART_TEST_ENCODER_SPEED_SEND;
+			else uart_test_step = UART_TEST_IDLE;
+			break;
+		default:
+			time_count = 0;
+		break; 
+	}
+}
+#endif
+
+void uart_recv_del(void)
+{
+	u1 recvdata_datect = 1;
+	
+	if(uart_recv_buf[0] != 0x11) recvdata_datect = 0;
+	else if(uart_recv_buf[1] != 0x12) recvdata_datect = 0;
+	else if(uart_recv_buf[2] != 0x07) recvdata_datect = 0;
+	else if(uart_recv_buf[4] != 0x00) recvdata_datect = 0;
+	else if(uart_recv_buf[5] != 0x00) recvdata_datect = 0;
+	else if(uart_recv_buf[6] != 0xAA) recvdata_datect = 0;
+	
+	if(recvdata_datect != 0)
+	{
+		uart_test_step = uart_recv_buf[3];
+		time_count = 0;
+	}
+	for(recvdata_datect=0;recvdata_datect<7;recvdata_datect++)
+	{
+		uart_recv_buf[recvdata_datect] = 0;		
+	}
+	R_UART0_Receive(uart_recv_buf, 7);
+}
+
+void average_speed(void)
+{
+	u1 i=0,j=0;
+	u2 u2_temp = 0;
+	
+	switch(average_step)
+	{
+		case 0:
+			if(2000<time_run_cnt && time_run_cnt<3000)
+			{
+				get_speed_buff[0] = u2g_d_rpm_current;
+				average_step = 1;
+			}
+			break;
+		case 1:
+			if(3000<time_run_cnt && time_run_cnt<4000)
+			{
+				get_speed_buff[1] = u2g_d_rpm_current;
+				average_step = 2;
+			}
+			break;
+		case 2:
+			if(4000<time_run_cnt && time_run_cnt<5000)
+			{
+				get_speed_buff[2] = u2g_d_rpm_current;
+				average_step = 3;
+			}
+			break;
+		case 3:
+			if(5000<time_run_cnt && time_run_cnt<6000)
+			{
+				get_speed_buff[3] = u2g_d_rpm_current;
+				average_step = 4;
+			}
+			break;
+		case 4:
+			if(6000<time_run_cnt && time_run_cnt<7000)
+			{
+				get_speed_buff[4] = u2g_d_rpm_current;
+				average_step = 5;
+			}
+			break;
+		case 5:
+			if(7000<time_run_cnt && time_run_cnt<8000)
+			{
+				get_speed_buff[5] = u2g_d_rpm_current;
+				average_step = 6;
+			}
+			break;
+		case 6:
+			if(8000<time_run_cnt && time_run_cnt<9000)
+			{
+				get_speed_buff[6] = u2g_d_rpm_current;
+				//encoder_speed = encoder_speed / 6;
+				for(i=0; i<6; i++)
+				{
+					for(j=6; j>i; j--)
+					{
+						if(get_speed_buff[j-1] > get_speed_buff[j])
+						{
+							u2_temp = get_speed_buff[j];
+							get_speed_buff[j] = get_speed_buff[j-1];
+							get_speed_buff[j-1] = u2_temp;
+						}
+					}
+				}
+				encoder_speed = get_speed_buff[3];
+				average_step = 0;
+			}
+			break;
+		default:
+			break;
+	}
+
+}
+
+s2 get_cnt = 0;
+void uart_rx_test_check(void)
+{
+	u1 recvdata_datect = 1;
+	if(u1l_uart_rxbuf[0] != 0x11) recvdata_datect = 0;
+	else if(u1l_uart_rxbuf[1] != 0x12) recvdata_datect = 0;
+	else if(u1l_uart_rxbuf[2] != 0x07) recvdata_datect = 0;
+	else if(u1l_uart_rxbuf[4] != 0x00) recvdata_datect = 0;
+	else if(u1l_uart_rxbuf[5] != 0x00) recvdata_datect = 0;
+	else if(u1l_uart_rxbuf[6] != 0xAA) recvdata_datect = 0;
+	
+	if(recvdata_datect != 0)
+	{
+		if(u1l_uart_rxbuf[3] == 0x09)
+		{
+			flag_test_enable = 1;
+			flag_test_once_stop = 1;
+		}
+		
+		R_UART0_Receive(u1l_uart_rxbuf,7);
+		uart_send_buf[0] = 0x22;
+		uart_send_buf[1] = 0x08;
+		switch(u1l_uart_rxbuf[3])
+		{
+			case UART_TEST_CURR:
+				uart_send_buf[2] = UART_TEST_CURR;
+				uart_send_buf[3] = 0;
+				uart_send_buf[4] = uart_test_curr_value & 0xff;
+				uart_send_buf[5] = 0;
+				uart_send_buf[6] = 0; 
+				uart_send_buf[7] = 0xBB;
+				R_UART0_Send(uart_send_buf,8);
+				break;
+			case UART_TEST_TEMP:
+				uart_send_buf[2] = UART_TEST_TEMP;
+				uart_send_buf[3] = (uart_test_temp_value >> 8) & 0xff;
+				uart_send_buf[4] = (uart_test_temp_value & 0xff);
+				uart_send_buf[5] = 0;
+				uart_send_buf[6] = 0;
+				uart_send_buf[7] = 0xBB;
+				R_UART0_Send(uart_send_buf,8);
+				break;
+			case UART_TEST_VER:
+				//P_VER_POWER = 1;
+				uart_send_buf[2] = UART_TEST_VER;
+				uart_send_buf[3] = (uart_test_ver_value >> 8) & 0xff;
+				uart_send_buf[4] = (uart_test_ver_value & 0xff);
+				uart_send_buf[5] = 0;
+				uart_send_buf[6] = 0;
+				uart_send_buf[7] = 0xBB;
+				R_UART0_Send(uart_send_buf,8);
+				//P_VER_POWER = 0;
+				break;
+			case UART_TEST_OPEN:
+				get_cnt = s2_encoder_cnt; 
+				if(get_cnt > 0) get_cnt |= 0x8000;
+				else get_cnt = -get_cnt;
+				encoder_speed = u2g_d_rpm_current;
+				uart_send_buf[2] = UART_TEST_OPEN;
+				uart_send_buf[3] = (get_cnt >> 8) & 0xff;
+				uart_send_buf[4] = (get_cnt & 0xff);
+				uart_send_buf[5] = (encoder_speed >> 8) & 0xff;
+				uart_send_buf[6] = (encoder_speed & 0xff);
+				uart_send_buf[7] = 0xBB;
+				R_UART0_Send(uart_send_buf,8);
+				break;
+			default:
+			break;
+		}
+	}
+}
+
+
+
+/**************************************************************************************/
+#if TEST_MODE==1
+u1 str[24] = {0};
+s2 temp_now = 0;
+u4 ver_now = 0;
+u1 len = 0;
+ 
+void uart_production_test(void)
+{
+	u1 i = 0;
+	switch(uart_test_step)
+	{
+		case UART_TEST_RESET_ON:
+			uart_send_buf[0] = 0x22;
+			uart_send_buf[1] = 0x08;
+			uart_send_buf[2] = 0x09;
+			uart_send_buf[3] = 0x09;
+			uart_send_buf[4] = 0x00;
+			uart_send_buf[5] = 0x00;
+			uart_send_buf[6] = 0x00;
+			uart_send_buf[7] = 0xBB;
+			time_count++;
+			if(time_count>200)
+			{
+				R_UART0_Receive(uart_recv_buf,7);
+				time_count = 0;
+				for(i=0;i<24;i++) str[i] = 0;
+				sprintf(str,"\nEnter Test Mode OK...");
+				R_UART0_Send(str,strlen(str));
+				uart_test_step = UART_TEST_IDLE;
+				flag_test_encoder = 0;
+				flag_test_rotate = 0;
+			}
+			break;
+		case UART_TEST_CURR:
+			time_count++;
+			if(time_count>50)
+			{
+				time_count = 0;
+				uart_send_buf[2] = UART_TEST_CURR;
+				uart_send_buf[3] = 0;
+				uart_send_buf[4] = uart_test_curr_value & 0xff;
+				uart_send_buf[5] = 0;
+				uart_send_buf[6] = 0; 
+				uart_send_buf[7] = 0xBB;
+				for(i=0;i<8;i++) str[i] = 0;
+				sprintf(str,"\nI = %d",uart_test_curr_value);
+				R_UART0_Send(str,strlen(str));
+				if(flag_test_encoder == 1) uart_test_step = UART_TEST_ENCODER_SPEED_SEND;
+				else uart_test_step = UART_TEST_IDLE;
+			}
+			break;
+		case UART_TEST_TEMP:
+			time_count++;
+			if(time_count>50)
+			{
+				time_count = 0;
+				uart_send_buf[2] = UART_TEST_TEMP;
+				uart_send_buf[3] = (uart_test_temp_value >> 8) & 0xff;
+				uart_send_buf[4] = (uart_test_temp_value & 0xff);
+				uart_send_buf[5] = 0;
+				uart_send_buf[6] = 0;
+				uart_send_buf[7] = 0xBB;
+				
+				for(i=0;i<16;i++) str[i] = 0;
+				temp_now = (s2)((s4)112 - (s4)((1281 * (s4)uart_test_temp_value) / 10000));
+				sprintf(str,"\nT = %d",temp_now);
+				R_UART0_Send(str,strlen(str));
+				if(flag_test_encoder == 1) uart_test_step = UART_TEST_ENCODER_SPEED_SEND;
+				else uart_test_step = UART_TEST_IDLE;
+			}
+			break;
+		case UART_TEST_VER:
+			P_VER_POWER = 1;
+			time_count++;
+			if(time_count>200)
+			{
+				time_count = 0;
+				uart_send_buf[2] = UART_TEST_VER;
+				uart_send_buf[3] = (uart_test_ver_value >> 8) & 0xff;
+				uart_send_buf[4] = (uart_test_ver_value & 0xff);
+				uart_send_buf[5] = 0;
+				uart_send_buf[6] = 0;
+				uart_send_buf[7] = 0xBB;
+				
+				ver_now = ((u4)1604 * (u4)uart_test_ver_value + (u4)17) / (u4)10000;
+				for(i=0;i<16;i++) str[i] = 0;
+				sprintf(str,"\nV = %d v",ver_now);
+				R_UART0_Send(str,strlen(str));
+				P_VER_POWER = 0;
+				if(flag_test_encoder == 1) uart_test_step = UART_TEST_ENCODER_SPEED_SEND;
+				else uart_test_step = UART_TEST_IDLE;
+			}
+			break;
+		case UART_TEST_ENCODER_SPEED:
+			if(flag_test_rotate == 0)
+			{
+				flag_test_encoder = 1;
+				
+				for(i=0;i<24;i++) str[i] = 0;
+				sprintf(str,"\nEncoder Testing...");
+				R_UART0_Send(str,strlen(str));
+				uart_test_step = UART_TEST_ENCODER_SPEED_SEND;
+			}
+			break;
+		case UART_TEST_ENCODER_SPEED_SEND:
+			average_speed();
+			if(time_run_cnt == TEST_OPEN_TIME)
+			{
+				if(s2_encoder_cnt > 0) s2_encoder_cnt |= 0x8000;
+				else s2_encoder_cnt = -s2_encoder_cnt; 
+				uart_send_buf[2] = UART_TEST_ENCODER_SPEED;
+				//uart_send_buf[3] = 0;
+				//uart_send_buf[4] = uart_test_curr_value & 0xff;
+				//uart_send_buf[5] = (uart_test_ver_value >> 8) & 0xff;
+				//uart_send_buf[6] = (uart_test_ver_value & 0xff);
+				//uart_send_buf[7] = (uart_test_temp_value >> 8) & 0xff;
+				//uart_send_buf[8] = (uart_test_temp_value & 0xff);
+				uart_send_buf[3] = (s2_encoder_cnt >> 8) & 0xff;
+				uart_send_buf[4] = (s2_encoder_cnt & 0xff);
+				uart_send_buf[5] = (encoder_speed >> 8) & 0xff;
+				uart_send_buf[6] = (encoder_speed & 0xff);
+				uart_send_buf[7] = 0xBB;
+				
+				for(i=0;i<24;i++) str[i] = 0;
+				sprintf(str,"\nE = %d;R = %d rpm",s2_encoder_cnt,encoder_speed);
+				R_UART0_Send(str,strlen(str));
+				time_run_cnt = 0;
+				flag_test_encoder = 0;
+				s2_encoder_cnt = 0;
+				uart_test_step = UART_TEST_IDLE;
+			}
+			break;
+		case UART_TEST_ROTATE:
+			if(flag_test_encoder == 0)
+			{
+				flag_test_rotate = 1;
+				uart_send_buf[2] = UART_TEST_ROTATE;
+				uart_send_buf[3] = 0x10;
+				uart_send_buf[4] = 0;
+				uart_send_buf[5] = 0;
+				uart_send_buf[6] = 0;
+				uart_send_buf[7] = 0xBB;
+				
+				for(i=0;i<24;i++) str[i] = 0;
+				sprintf(str,"\nRotate OK...",s2_encoder_cnt,encoder_speed);
+				R_UART0_Send(str,strlen(str));
+				uart_test_step = UART_TEST_IDLE;
+			}
+			else uart_test_step = UART_TEST_ENCODER_SPEED_SEND;
+			break;
+		case UART_TEST_EXIT:
+			if(flag_test_encoder==0 && flag_test_rotate==0)
+			{
+				flag_test_enable = 0;
+				uart_send_buf[0] = 0x22;
+				uart_send_buf[1] = 0x08;
+				uart_send_buf[2] = 0x0A;
+				uart_send_buf[3] = 0x0A;
+				uart_send_buf[4] = 0x00;
+				uart_send_buf[5] = 0x00;
+				uart_send_buf[6] = 0x00;
+				uart_send_buf[7] = 0xBB;
+				
+				for(i=0;i<24;i++) str[i] = 0;
+				sprintf(str,"\nExit Test Mode OK...");
+				R_UART0_Send(str,strlen(str));
+				R_UART0_Receive(u1l_uart_rxbuf, N_UART_BYTE_RX);
+				time_count = 0;
+				time_run_cnt = 0;
+				s2_encoder_cnt = 0;
+				flag_test_once_stop = 0;
+				uart_test_step = UART_TEST_RESET_ON;
+			}
+			else if(flag_test_encoder == 1) uart_test_step = UART_TEST_ENCODER_SPEED_SEND;
+			else uart_test_step = UART_TEST_IDLE;
+			break;
+		default:
+			time_count = 0;
+		break; 
+	}
+}
+#endif

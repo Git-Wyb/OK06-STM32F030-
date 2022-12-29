@@ -5,8 +5,8 @@
 #include "Sys.h"
 
 
-extern u1 Rx_Buff[10];
-extern u1 Tx_Buff[10];
+//extern u1 Rx_Buff[10];
+//extern u1 Tx_Buff[10];
 
 void i_serial_uart_tx_end(void);
 void i_serial_uart_rx_end(void);

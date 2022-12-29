@@ -39,6 +39,7 @@ static void check_sw_stop_tr(void);
 static void sw_in_count(void);
 static void check_power_start_sw(void);
 static void check_any_key_input(void);
+static void open_close_production_test(void);
 
 //static u2 u2l_cnt_stop_reset;		
 //static u1 u1l_key_reset_stop;		
@@ -146,9 +147,19 @@ static void sw_all_off_ope(void){
 
 void sw_input_check(void)
 {
-	u1g_sw[0x00] = (u1)(~P_OPEN_SW & 0x01);			
-	u1g_sw[0x01] = (u1)(~P_CLOSE_SW & 0x01);			
-	u1g_sw[0x02] = (u1)(~P_STOP_SW & 0x01);			
+    if(flag_test_enable == 1)
+	{
+		open_close_production_test();		
+	}
+	else
+    {
+        u1g_sw[0x00] = P_OPEN_SW;			
+        u1g_sw[0x01] = P_CLOSE_SW;			
+        u1g_sw[0x02] = P_STOP_SW;	
+        time_run_cnt = 0;
+		flag_test_encoder = 0;
+		flag_test_rotate = 0;
+    }		
 #if 0
 	u1g_sw[0x00] = P_OPEN_SW & P_OPEN_SW_WIRED;	
 	u1g_sw[0x01] = P_CLOSE_SW & P_CLOSE_SW_WIRED;
@@ -447,3 +458,106 @@ static void check_any_key_input(void)
 		u1g_f_any_key_input	= FALSE;
 	}
 }
+
+
+u1 close_cnt = 0;
+void open_close_production_test(void)
+{
+	if(flag_test_encoder == 1)
+	{
+		if(u1g_kahuka_input != 1)
+		{
+			if(time_run_cnt < 1000)//open
+			{
+				u1g_sw[0x00] = 0;	
+			}
+			else	u1g_sw[0x00] = 1;
+			if(time_run_cnt > (TEST_OPEN_TIME-1000) && time_run_cnt < TEST_OPEN_TIME)
+			{
+				u1g_sw[0x02] = 0;				
+			}
+			else 
+			{
+				u1g_sw[0x02] = P_STOP_SW;
+				if(P_STOP_SW == 0) time_run_cnt = TEST_OPEN_TIME;//If the remote control operation stops, the opening action ends
+			}
+		}
+		else
+		{
+			time_run_cnt = TEST_OPEN_TIME;			
+		}
+	}
+	else if(flag_test_rotate == 1)
+	{/*
+		if(time_run_cnt < 1000)
+		{
+			u1g_sw[0x00] = 0;	
+		}
+		else	u1g_sw[0x00] = 1;
+		if(time_run_cnt > (TEST_ROTATE_TIME-1000) && time_run_cnt < TEST_ROTATE_TIME)
+		{
+			u1g_sw[0x02] = 0;				
+		}
+		if(time_run_cnt >= (TEST_ROTATE_TIME-200))
+		{
+			flag_test_rotate = 0;
+			time_run_cnt = 0;
+		}*/
+		/////
+		if(u1g_kahuka_input != 1)
+		{
+			//?????process_osikiri_close
+			if(time_run_cnt<250)
+			{
+				u1g_sw[0x02] = 0;
+			}
+			else
+			{
+				u1g_sw[0x01] = 0;
+			}
+			if(time_run_cnt == 1000)	
+			{
+				time_run_cnt = 0;
+				close_cnt++;
+				if(close_cnt == 4)
+				{
+					flag_test_rotate = 0;
+                    s2_encoder_cnt = 0;
+					close_cnt = 0;
+					u1g_sw[0x01] = 1;
+					u1g_sw[0x02] = 1;
+				}
+			}
+			if(P_STOP_SW == 0)//If the remote control operation stops, the closing action is ended
+			{
+				u1g_sw[0x01] = 1;
+				u1g_sw[0x02] = 1;
+				flag_test_rotate = 0;
+				time_run_cnt = 0;
+				close_cnt = 0;
+			}
+		}
+		else 
+		{
+			u1g_sw[0x01] = P_CLOSE_SW;
+			u1g_sw[0x02] = P_STOP_SW;
+			flag_test_rotate = 0;
+			time_run_cnt = 0;
+			close_cnt = 0;
+		}
+	}
+	else  
+	{
+		if(flag_test_once_stop == 1)
+		{
+			u1g_sw[0x02] = 0;
+			if(time_run_cnt >= 900)
+			{
+				flag_test_once_stop = 0;
+				time_run_cnt = 0;
+			}
+		}
+		else u1g_sw[0x02] = P_STOP_SW;
+	}
+}
+

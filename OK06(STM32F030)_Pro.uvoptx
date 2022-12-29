@@ -223,7 +223,7 @@
         <Ww>
           <count>14</count>
           <WinNumber>1</WinNumber>
-          <ItemText>flag_tim16_en</ItemText>
+          <ItemText>s2g_cnt_plus</ItemText>
         </Ww>
         <Ww>
           <count>15</count>
@@ -233,7 +233,22 @@
         <Ww>
           <count>16</count>
           <WinNumber>1</WinNumber>
-          <ItemText>u1a_fg_current_pulse_over_flow</ItemText>
+          <ItemText>u1g_current_mode</ItemText>
+        </Ww>
+        <Ww>
+          <count>17</count>
+          <WinNumber>1</WinNumber>
+          <ItemText>u1l_uart_rxbuf</ItemText>
+        </Ww>
+        <Ww>
+          <count>18</count>
+          <WinNumber>1</WinNumber>
+          <ItemText>timeout_test_enter,0x0A</ItemText>
+        </Ww>
+        <Ww>
+          <count>19</count>
+          <WinNumber>1</WinNumber>
+          <ItemText>u2g_d_pwm_test,0x0A</ItemText>
         </Ww>
       </WatchWindow1>
       <MemoryWindow1>

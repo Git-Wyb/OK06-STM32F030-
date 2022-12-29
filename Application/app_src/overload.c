@@ -340,7 +340,9 @@ void curr_lev_de(void)
 	if(u1g_ad_ref[0] == 1)			
 		{
 			u1g_ad_ref[0] = 0;
-
+            
+            uart_test_curr_value = u2g_ad_now[(CURR - CURR)];
+            
 			bousou_check();
 
 			if( (u1g_mode == U1G_CLOSE_MODE)||(u1g_mode == U1G_OPEN_MODE)||
@@ -1489,6 +1491,8 @@ static void check_temp_error(void){
 			u2a_temp_ad_data[u1a_i] = u2g_check_temp_ad_data[u1a_i];
 		}
 	sort_check_ad_data(u2a_temp_ad_data);
+        
+    uart_test_temp_value = u2a_temp_ad_data[u1a_center_num];
 
 	if(get_ecu_test_state() == ECU_NO_TEST){
 		u1l_f_temp_error_stop = 0;
@@ -1583,6 +1587,8 @@ static void check_ver_error(void){
 			u2a_ver_ad_data[u1a_i] = u2g_check_ver_ad_data[u1a_i];
 		}
 	sort_check_ad_data(u2a_ver_ad_data);
+        
+    uart_test_ver_value = u2a_ver_ad_data[u1a_center_num];
 
 	if(get_ecu_test_state() == ECU_NO_TEST){
 		u1l_f_ver_error_stop = 0;

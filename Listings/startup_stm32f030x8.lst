@@ -61,7 +61,7 @@ ARM Macro Assembler    Page 1
    39 00000000         
    40 00000000 00001000 
                        Stack_Size
-                               EQU              0x0001000
+                               EQU              0x00001000
    41 00000000         
 
 

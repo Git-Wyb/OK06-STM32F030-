@@ -79,7 +79,7 @@
 #define CLOSE_MAX_CHANGE		28
 #define CLOSE_MIN_CHANGE		((s2)(-28))
 
-#define	KP				((s4)39)//96//96		
+#define	KP				((s4)28)//96//96		
 #define	KI				((s4)1)//25//24		
 
 #define UNIT1_UNIT2_DATA_PLS_25		25
@@ -90,6 +90,7 @@
 #define PULSE_LENGTH_1110RPM		1110
 #define PULSE_LENGTH_1169RPM		1169		
 #define PULSE_LENGTH_1666RPM		1666
+#define TEST_SPEED_657RPM			657
 
 #define	STAND_PLUS_LENGTH		PULSE_LENGTH_1169RPM		
 #define	MAINT_PLUS_LENGTH		0x3f1f				//(DIPSW) 1392.4rpm

@@ -65,10 +65,10 @@
 #define U1_SPEED_UP		1			/* 1:抶偄偺偱UP */
 #define U1_SPEED_DOWN		2			/* 2:懍偄偺偱DOWN */
 
-#define NORMAL_21MS_MORE_DUTY		109		/*109 脉冲宽度21ms以上的软启动后DUTY */
+#define NORMAL_21MS_MORE_DUTY		50		/*109 脉冲宽度21ms以上的软启动后DUTY */
 #define NORMAL_28MS_MORE_DUTY		50		/*50 脉冲宽度28ms以上的软启动后DUTY */
 #define SOFT_START_20MS_LESS_DUTY	18		/*18 脉冲宽度小于20ms的软启动中DUTY */
-#define SOFT_START_20MS_MORE_DUTY	24		/*105 脉冲宽度20ms以上的软启动中DUTY */
+#define SOFT_START_20MS_MORE_DUTY	12		/*105 脉冲宽度20ms以上的软启动中DUTY */
 
 /* extern u1 u1g_c_no_plus;					棉猫皰菈敛堇笆拶冻堇 */
 /* extern u2 u2g_c_interval_plus;				僷儖僗偑棃側偄帪娫傪僇僂儞僩 */

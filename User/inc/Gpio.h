@@ -6,7 +6,8 @@
 
 #define GPIOx_IN(GPIOx,PINx)   (u1){(GPIOx->IDR & PINx) ? 1 : 0}
 #define GPIOx_OUT(GPIOx,PINx,y)   {if(y){GPIOx->BSRR = PINx;}else{GPIOx->BRR = PINx;}}
-
+#define HIGH_LEVEL  1
+#define P_EM_RESET  0
 /*
 IO OUT: PB3/PB4/PB5
 IO IN: PB13/PB14/PB15
@@ -24,9 +25,16 @@ IO IN: PB13/PB14/PB15
 #define OPEN_SW     PB15
 #define STOP_SW     PB14
 #define CLOSE_SW    PB13
+
+#if HIGH_LEVEL
 #define P_OPEN_SW   (u1)(~OPEN_SW & 0x01)
 #define P_STOP_SW   (u1)(~STOP_SW & 0x01)
 #define P_CLOSE_SW  (u1)(~CLOSE_SW & 0x01)
+#else
+#define P_OPEN_SW   (u1)(OPEN_SW & 0x01)
+#define P_STOP_SW   (u1)(STOP_SW & 0x01)
+#define P_CLOSE_SW  (u1)(CLOSE_SW & 0x01)
+#endif
 
 #define P_RELAY_1_0 GPIOx_OUT(GPIOB,GPIO_Pin_4,0)
 #define P_RELAY_1_1 GPIOx_OUT(GPIOB,GPIO_Pin_4,1)
@@ -35,8 +43,13 @@ IO IN: PB13/PB14/PB15
 #define P_RELAY_3_0 GPIOx_OUT(GPIOB,GPIO_Pin_5,0)
 #define P_RELAY_3_1 GPIOx_OUT(GPIOB,GPIO_Pin_5,1)
 
+#if P_EM_RESET
 #define	P_EM_RESET_N_0  GPIOx_OUT(GPIOB,GPIO_Pin_12,0)
 #define	P_EM_RESET_N_1  GPIOx_OUT(GPIOB,GPIO_Pin_12,1)
+#else
+#define	P_EM_RESET_N_0  GPIOx_OUT(GPIOB,GPIO_Pin_12,1)
+#define	P_EM_RESET_N_1  GPIOx_OUT(GPIOB,GPIO_Pin_12,0)
+#endif
 
 #define P_PWM_OUT_0     GPIOx_OUT(GPIOA,GPIO_Pin_6,0)
 #define P_PWM_OUT_1     GPIOx_OUT(GPIOA,GPIO_Pin_6,1)
